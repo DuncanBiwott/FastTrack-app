@@ -1,17 +1,14 @@
 import 'package:fast_track/constants/constants.dart';
-import 'package:fast_track/views/feeds_screen.dart';
-import 'package:fast_track/views/home.dart';
-import 'package:fast_track/views/profile_page.dart';
-import 'package:fast_track/views/search.dart';
-import 'package:fast_track/views/send_feedback.dart';
+import 'package:fast_track/views/dashboard.dart';
+import 'package:fast_track/views/welcome_page.dart';
+import 'package:fast_track/widgets/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
-  runApp(DashboardApp());
+  runApp(MainApp());
 }
 
-class DashboardApp extends StatelessWidget {
+class MainApp extends StatelessWidget {
   @override
   Constants constants = Constants();
   Widget build(BuildContext context) {
@@ -24,6 +21,7 @@ class DashboardApp extends StatelessWidget {
         );
       },
       theme: ThemeData(
+        useMaterial3: true,
         appBarTheme: AppBarTheme(
           color: constants.p_button,
           elevation: 0,
@@ -44,112 +42,12 @@ class DashboardApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch()
             .copyWith(secondary: constants.s_button),
       ),
-      home: DashboardScreen(),
+      home:const  SplashScreen(),
     );
   }
 }
 
-class DashboardScreen extends StatefulWidget {
-  @override
-  _DashboardScreenState createState() => _DashboardScreenState();
-}
 
-class _DashboardScreenState extends State<DashboardScreen> {
-
-    int _selectedIndex = 0;
-
-  List<Widget> _pages ()=><Widget> [
-    HomeScreen(),
-    FeedbackPage(),
-    FeedsScreen(),
-    const ProfileManagementPage(),
-   
-    
-    
-  ];
-
-  void _onItemTapped(int index) {
-    
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            CircleAvatar(
-              radius: 16.0,
-              backgroundImage: NetworkImage(
-                  'https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg'),
-            ),
-            SizedBox(width: 8.0),
-            Text('Dan'),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SearchPage(),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-          
-            },
-          ),
-        ],
-      ),
-      
-      body: _pages()[_selectedIndex],
-      bottomNavigationBar: Container(
-      
-        child: BottomNavigationBar(
-            type: BottomNavigationBarType.shifting,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.blue,
-            showUnselectedLabels: true,
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.house),
-                label: "Dashboard",
-              ),
-              
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.rss
-                ),
-                label: "Feedback",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.commentDots
-                ),
-                label: "Feeds",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user
-                ),
-                label: "Profile",
-              ),
-            ]),
-      ),
-    );
-  }
-
- 
-}
 
 
 
