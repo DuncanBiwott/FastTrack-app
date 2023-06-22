@@ -65,6 +65,7 @@ Future<Response> logout(BuildContext context) async {
       options: options,
     );
     await deleteToken();
+    // ignore: avoid_single_cascade_in_expression_statements
     Flushbar(
       flushbarPosition: FlushbarPosition.TOP,
     message: 'Successfully logged out',
@@ -81,6 +82,7 @@ Future<Response> logout(BuildContext context) async {
     });
 
    return response;
+  // ignore: deprecated_member_use
   } on DioError catch (e) {
     
     final errorMessage = DioExceptions.fromDioError(e).toString();

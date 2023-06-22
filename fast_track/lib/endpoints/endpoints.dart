@@ -10,6 +10,9 @@ class EndPoints{
   static const String resendUrl="http://$ip_address/api/v1/registration/resend";
   static const String forgortPassUrl="http://$ip_address/api/v1/registration/forgot";
   static const String contactUrl="http://$ip_address/api/v1/registration/contact";
+  static const String incidentUrl="http://$ip_address/v1/api/incident";
+  static const String complaintUrl="http://$ip_address/v1/api/incident";
+
 
   // receiveTimeout
   static const int receiveTimeout = 15000;
