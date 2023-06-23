@@ -1,6 +1,4 @@
 import 'package:fast_track/constants/constants.dart';
-import 'package:fast_track/views/dashboard.dart';
-import 'package:fast_track/views/welcome_page.dart';
 import 'package:fast_track/widgets/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +8,6 @@ void main() {
 
 class MainApp extends StatelessWidget {
   @override
-  Constants constants = Constants();
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -23,26 +20,26 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         appBarTheme: AppBarTheme(
-          color: constants.p_button,
+          color: Constants().p_button,
           elevation: 0,
         ),
-        primaryColor: constants.p_button, 
+        primaryColor: Constants().p_button, 
         textTheme: TextTheme(
           headline6: TextStyle(
-            color: constants.headline,
+            color: Constants().headline,
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
           bodyText2: TextStyle(
-            color: constants.paragraph,
+            color: Constants().paragraph,
             fontSize: 16.0,
           ),
         ),
-        backgroundColor: constants.background,
+        backgroundColor: Constants().background,
         colorScheme: ColorScheme.fromSwatch()
-            .copyWith(secondary: constants.s_button),
+            .copyWith(secondary: Constants().s_button),
       ),
-      home:const  SplashScreen(),
+      home: const SplashScreen (),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:fast_track/constants/constants.dart';
 import 'package:fast_track/views/home.dart';
+import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:fast_track/views/profile_page.dart';
 import 'package:fast_track/views/search.dart';
 import 'package:fast_track/views/send_feedback.dart';
@@ -94,6 +95,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       
       body: _pages()[_selectedIndex],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Constants().p_button,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainPostScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       bottomNavigationBar: Container(
       
         child: BottomNavigationBar(
