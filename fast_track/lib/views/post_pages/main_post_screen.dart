@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:another_flushbar/flushbar.dart';
@@ -6,6 +7,8 @@ import 'package:fast_track/models/complaint.dart';
 import 'package:fast_track/services/api/user_request_services/complaint_client.dart';
 import 'package:fast_track/services/api/user_request_services/incident_client.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MainPostScreen extends StatefulWidget {
@@ -25,7 +28,7 @@ class _MainPostScreenState extends State<MainPostScreen>
   TabController? _tabController;
   final ComplaintClient _complaintClient = ComplaintClient();
   final IncidentClient _incidentClient = IncidentClient();
-   bool _isLoading = false;
+  bool _isLoading = false;
 
   Future _showSuccessMessage(String massage, Color color) {
     return Flushbar(
@@ -69,8 +72,73 @@ class _MainPostScreenState extends State<MainPostScreen>
         _images.add(File(pickedImage.path));
       });
     }
-    
   }
+
+  //Geting the location
+
+  String? _currentAddress;
+  Position? _currentPosition;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+  try {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      _currentPosition!.latitude,
+      _currentPosition!.longitude,
+    );
+    if (placemarks !=null &&placemarks.isNotEmpty) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+            '${place.street}';
+      });
+    }
+    print(_currentAddress);
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -117,46 +185,48 @@ class _MainPostScreenState extends State<MainPostScreen>
                         child: Align(
                           alignment: Alignment.topRight,
                           child: ElevatedButton(
-                              onPressed: () async{
-                                if (_formKeyComplaint.currentState!.validate()) {
-                                   setState(() {
-                                  _isLoading =
-                                      true; // set isLoading to true when submitting data
-                                });
+                              onPressed: () async {
+                                if (_formKeyComplaint.currentState!
+                                    .validate()) {
+                                  setState(() {
+                                    _isLoading =
+                                        true; // set isLoading to true when submitting data
+                                  });
 
                                   try {
-                                    await _complaintClient.addComplaint(complaint: Complaint(
-                                      title: _complaintTitleController!.text.trim(),
+                                    await _complaintClient.addComplaint(
+                                        complaint: Complaint(
+                                      title: _complaintTitleController!.text
+                                          .trim(),
                                       category: 'HEALTH',
-                                      description: _complaintController!.text.trim(),
+                                      description:
+                                          _complaintController!.text.trim(),
                                       location: 'ELDORET',
                                       status: 'OPEN',
-                                      submissionDateTime: DateTime.now().toIso8601String(),
+                                      submissionDateTime:
+                                          DateTime.now().toIso8601String(),
                                     ));
                                     setState(() {
-                                  _isLoading =
-                                      false; // set isLoading to true when submitting data
-                                });
+                                      _isLoading =
+                                          false; // set isLoading to true when submitting data
+                                    });
 
-                                    _showSuccessMessage('Complaint Posted Successfully', Colors.green);
-                                     
+                                    _showSuccessMessage(
+                                        'Complaint Posted Successfully',
+                                        Colors.green);
                                   } catch (e) {
                                     setState(() {
-                                  _isLoading =
-                                      false; // set isLoading to true when submitting data
-                                });
-                                    _showSuccessMessage('Error Posting Complaint', Colors.red);
-                                     
+                                      _isLoading =
+                                          false; // set isLoading to true when submitting data
+                                    });
+                                    _showSuccessMessage(
+                                        'Error Posting Complaint', Colors.red);
                                   }
-                                 
-
-                                 
                                 }
-                                
-                                
                               },
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
                                   Constants().p_button,
                                 ),
                                 shape: MaterialStateProperty.all<
@@ -177,7 +247,6 @@ class _MainPostScreenState extends State<MainPostScreen>
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        
                         autocorrect: true,
                         enableSuggestions: true,
                         controller: _complaintTitleController,
@@ -188,7 +257,6 @@ class _MainPostScreenState extends State<MainPostScreen>
                         decoration: const InputDecoration(
                           hintText: "Title Complaint?",
                           border: InputBorder.none,
-                        
                         ),
                         validator: (value) => value!.isEmpty
                             ? 'Please enter a title for your complaint'
@@ -197,7 +265,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                       const SizedBox(height: 16.0),
                       TextFormField(
                         autocorrect: true,
-                        maxLines: 10,
+                        maxLines: 5,
                         enableSuggestions: true,
                         controller: _complaintController,
                         style: const TextStyle(
@@ -213,6 +281,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                             : null,
                       ),
                       const SizedBox(height: 16.0),
+                    
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -224,11 +293,17 @@ class _MainPostScreenState extends State<MainPostScreen>
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.photo_camera),
+                              icon: const Icon(
+                                Icons.location_on,
+                                size: 32.0,
+                              ),
+                              onPressed: () => _getCurrentPosition()),
+                          IconButton(
+                            icon: const Icon(Icons.photo_camera),
                             onPressed: () => _pickImage(ImageSource.camera),
                           ),
                           IconButton(
-                            icon: Icon(Icons.photo_library),
+                            icon: const Icon(Icons.photo_library),
                             onPressed: () => _pickImage(ImageSource.gallery),
                           ),
                         ],
@@ -241,7 +316,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                             return Stack(
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(top: 8.0),
+                                  margin: const EdgeInsets.only(top: 8.0),
                                   height: 200.0,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -281,34 +356,40 @@ class _MainPostScreenState extends State<MainPostScreen>
                         child: Align(
                           alignment: Alignment.topRight,
                           child: ElevatedButton(
-                              onPressed: () async{
+                              onPressed: () async {
                                 if (_formKeyIncident.currentState!.validate()) {
-                                   setState(() {
-                                  _isLoading =
-                                      true; // set isLoading to true when submitting data
-                                });
-                                 try{
-                                  await _incidentClient.reportIncident(_incidentTitleController!.text.trim(), _incidentController!.text.trim(), DateTime.now(), "Mombasa", "CRITICAL", _images);
-                                  _showSuccessMessage('Incident Posted Successfully', Colors.green);
-                                   setState(() {
-                                  _isLoading =
-                                      true; // set isLoading to true when submitting data
-                                });
-
-
-                                 }catch(e){
+                                  setState(() {
+                                    _isLoading =
+                                        true; // set isLoading to true when submitting data
+                                  });
+                                  try {
+                                    await _incidentClient.reportIncident(
+                                        _incidentTitleController!.text.trim(),
+                                        _incidentController!.text.trim(),
+                                        DateTime.now(),
+                                        "Mombasa",
+                                        "CRITICAL",
+                                        _images);
+                                    _showSuccessMessage(
+                                        'Incident Posted Successfully',
+                                        Colors.green);
                                     setState(() {
-                                  _isLoading =
-                                      false; // set isLoading to true when submitting data
-                                });
-                                    _showSuccessMessage('Error Posting Incident', Colors.red);
-                                   
-
-                                 }
+                                      _isLoading =
+                                          true; // set isLoading to true when submitting data
+                                    });
+                                  } catch (e) {
+                                    setState(() {
+                                      _isLoading =
+                                          false; // set isLoading to true when submitting data
+                                    });
+                                    _showSuccessMessage(
+                                        'Error Posting Incident', Colors.red);
+                                  }
                                 }
                               },
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
                                   Constants().p_button,
                                 ),
                                 shape: MaterialStateProperty.all<
@@ -328,7 +409,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                       TextFormField(
+                      TextFormField(
                         autocorrect: true,
                         enableSuggestions: true,
                         controller: _incidentTitleController,
@@ -347,7 +428,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                       const SizedBox(height: 16.0),
                       TextFormField(
                         autocorrect: true,
-                        maxLines: 10,
+                        maxLines: 5,
                         enableSuggestions: true,
                         controller: _incidentController,
                         style: const TextStyle(
@@ -373,6 +454,12 @@ class _MainPostScreenState extends State<MainPostScreen>
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          IconButton(
+                              icon: const Icon(
+                                Icons.location_on,
+                                size: 32.0,
+                              ),
+                              onPressed: () => _getCurrentPosition()),
                           IconButton(
                             icon: const Icon(Icons.photo_camera),
                             onPressed: () => _pickImage(ImageSource.camera),

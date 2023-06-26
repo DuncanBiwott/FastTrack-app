@@ -110,30 +110,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
       bottomNavigationBar: Container(
       
         child: BottomNavigationBar(
-            type: BottomNavigationBarType.shifting,
             selectedItemColor: Colors.black,
-            unselectedItemColor: Constants().p_button,
-            showUnselectedLabels: true,
+            showUnselectedLabels: false,
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.house),
+                icon: Icon(FontAwesomeIcons.house,size: 16,),
                 label: "Dashboard",
               ),
               
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.rss
+                icon: Icon(FontAwesomeIcons.rss,size: 16,
                 ),
                 label: "Feedback",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.commentDots
+                icon: Icon(FontAwesomeIcons.commentDots,size: 16,
                 ),
                 label: "Feeds",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user
+                icon: Icon(FontAwesomeIcons.user,size: 16,
                 ),
                 label: "Profile",
               ),
