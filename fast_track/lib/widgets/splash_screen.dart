@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 void checkToken(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? token = prefs.getString('fast_token');
      // Token exists, navigate to Dashboard
 
     if (token != null && token.isNotEmpty) {

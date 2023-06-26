@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fast_track/endpoints/endpoints.dart';
 import 'package:fast_track/models/complaint.dart';
+import 'package:fast_track/models/complaint_response.dart';
 import 'package:fast_track/services/api/authenticationService/interceptors/exceptions/dio_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,9 +31,9 @@ class ComplaintClient{
     }
     final options = Options(
     headers: {
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
     },
   );
 
@@ -55,7 +56,7 @@ class ComplaintClient{
     }
   }
 
-  Future<Response>getConplaints({required int perpage,required int page,String? search}) async {
+  Future<ComplaintResponse>getConplaints({required int perpage,required int page,String? search}) async {
     Response response;
     try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -81,7 +82,7 @@ class ComplaintClient{
           }, options: options);
 
       if (response.statusCode == 200 ) {
-        return response;
+        return  ComplaintResponse.fromJson(response.data['data'][0]);
       } else {
         throw Exception('Failed to get Complaints');
       }
