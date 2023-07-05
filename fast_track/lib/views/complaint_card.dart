@@ -1,29 +1,58 @@
 import 'package:fast_track/constants/constants.dart';
+import 'package:fast_track/models/complaint_response.dart';
+import 'package:fast_track/services/api/user_request_services/complaint_client.dart';
 import 'package:flutter/material.dart';
 
-class FeedCard extends StatelessWidget {
-  final String avatarUrl;
-  final String name;
-  final String timePosted;
-  final String status;
-  final String title;
-  final String description;
-  final int voteCount;
+class ComplaintCard extends StatefulWidget {
 
-  const FeedCard({
+
+  const ComplaintCard({
     Key? key,
-    required this.avatarUrl,
-    required this.name,
-    required this.timePosted,
-    required this.status,
-    required this.title,
-    required this.description,
-    required this.voteCount,
   }) : super(key: key);
 
   @override
+  State<ComplaintCard> createState() => _ComplaintCardState();
+
+}
+
+class _ComplaintCardState extends State<ComplaintCard> {
+
+  
+
+   Future<List<ComplaintResponse>>? complaintsData;
+
+  @override
+  void initState() {
+    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20);
+    super.initState();
+  }
+
+
+onRefreshPage(){
+  setState(() {
+    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20);
+  });
+}
+ 
+  @override
   Widget build(BuildContext context) {
-    return Card(
+    return FutureBuilder<List<ComplaintResponse>>(
+      future:ComplaintClient().getComplaints( page: 1, perPage: 20),
+      builder: (context, snapshot) { 
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          List<ComplaintResponse> data = snapshot.data!;
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return Card(
       elevation: 2.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -35,22 +64,20 @@ class FeedCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                    radius: 20.0, backgroundImage: NetworkImage(avatarUrl)),
-                SizedBox(width: 8.0),
+               
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
-                      style: TextStyle(
+                      data[index].user["username"],
+                      style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      timePosted,
-                      style: TextStyle(
+                      data[index].date,
+                      style: const TextStyle(
                         fontSize: 12.0,
                         color: Colors.grey,
                       ),
@@ -59,56 +86,50 @@ class FeedCard extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  status,
+                  data[index].status,
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
-                    color: status == 'Waiting' ? Colors.orange : Colors.green,
+                    color: data[index].status == 'OPEN' ? Colors.orange : Colors.green,
                   ),
                 ),
               ],
             ),
             SizedBox(height: 16.0),
             Text(
-              title,
-              style: TextStyle(
+              data[index].title,
+              style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8.0),
             Text(
-              description,
-              style: TextStyle(
+              data[index].description,
+              style: const TextStyle(
                 fontSize: 14.0,
                 color: Colors.grey,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.thumb_up,
                   size: 16.0,
                   color: Colors.grey,
                 ),
-                SizedBox(width: 4.0),
-                Text(
-                  voteCount.toString(),
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey,
-                  ),
-                ),
-                Spacer(),
+                const SizedBox(width: 4.0),
+               
+                const Spacer(),
                 ElevatedButton(
                   onPressed: () {
-                    // Add your logic for viewing feed details here
+               
                   },
                   style: ElevatedButton.styleFrom(
-                backgroundColor:Constants().s_button, // Set background color
+                backgroundColor:Constants().s_button, 
               ),
                   child: Text('View Details',style: TextStyle(color: Constants().s_button_text),),
                 ),
@@ -117,6 +138,16 @@ class FeedCard extends StatelessWidget {
           ],
         ),
       ),
+        );
+             },);
+       
+     
+    }
+      },
     );
+    
   }
 }
+
+
+

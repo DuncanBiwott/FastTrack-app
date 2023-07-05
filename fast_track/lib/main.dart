@@ -25,12 +25,12 @@ class MainApp extends StatelessWidget {
         ),
         primaryColor: Constants().p_button, 
         textTheme: TextTheme(
-          headline6: TextStyle(
+          titleLarge: TextStyle(
             color: Constants().headline,
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
-          bodyText2: TextStyle(
+          bodyMedium: TextStyle(
             color: Constants().paragraph,
             fontSize: 16.0,
           ),

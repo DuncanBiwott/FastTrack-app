@@ -57,39 +57,47 @@ class ComplaintClient {
     }
   }
 
-  Future<ComplaintResponse> getConplaints(
-      {required int perpage, required int page, String? search}) async {
-    Response response;
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('fast_token');
+  Future<List<ComplaintResponse>> getComplaints({
+  required int perPage,
+  required int page,
+  String? search
+}) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('fast_token');
 
-      if (token == null && token!.isEmpty) {
-        throw Exception('Token not found');
-      }
-      final options = Options(
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
-
-      response = await _dio.get(_baseUrl,
-          queryParameters: {'per_page': perpage, 'page': page},
-          options: options);
-
-      if (response.statusCode == 200) {
-        return ComplaintResponse.fromJson(response.data['data'][0]);
-      } else {
-        throw Exception('Failed to get Complaints');
-      }
-      // ignore: deprecated_member_use
-    } on DioError catch (e) {
-      final errorMessage = DioExceptions.fromDioError(e).toString();
-      throw errorMessage;
+    if (token == null || token.isEmpty) {
+      throw Exception('Token not found');
     }
+
+    final options = Options(
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    Response response = await _dio.get(
+      _baseUrl,
+      queryParameters: {'per_page': perPage, 'page': page},
+      options: options,
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = response.data["data"]; 
+        List<ComplaintResponse> complaints = responseData.map((complaint) => ComplaintResponse.fromJson(complaint)).toList();
+      return complaints;
+      
+    } else {
+      throw Exception('Failed to get Complaints');
+    }
+  } on DioError catch (e) {
+    final errorMessage = DioExceptions.fromDioError(e).toString();
+    throw Exception(errorMessage);
   }
+}
+
 
   Future<String> getLocation(
       {required double latitude, required double longitude}) async {

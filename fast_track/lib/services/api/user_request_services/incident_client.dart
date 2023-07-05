@@ -22,7 +22,7 @@ class IncidentClient {
         responseType: ResponseType.json),
   );
 
-  Future<IncidentResponse> getAllIncidents(
+  Future<List<IncidentResponse>> getAllIncidents(
       {required int perpage, required int page, String? search}) async {
     Response response;
     try {
@@ -44,12 +44,14 @@ class IncidentClient {
           queryParameters: {'per_page': perpage, 'page': page},
           options: options);
 
+
       if (response.statusCode == 200) {
-        return IncidentResponse.fromJson(response.data['data'][0]);
-      } else {
-        throw Exception('Failed to get Complaints');
-      }
-      // ignore: deprecated_member_use
+        final List<dynamic> responseData = response.data["data"];
+         List<IncidentResponse> incidents = responseData.map((incident) => IncidentResponse.fromJson(incident)).toList();
+      return incidents;
+    } else {
+      throw Exception('Failed to get Complaints');
+    }
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;

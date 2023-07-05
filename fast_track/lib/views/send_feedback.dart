@@ -66,7 +66,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 onPressed: _submitFeedback,
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Theme.of(context).primaryColor, // Set background color
+                      Theme.of(context).primaryColor, 
                 ),
               ),
               const SizedBox(height: 32.0),
@@ -84,11 +84,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   style: TextStyle(color: Constants().p_button_text),
                 ),
                 onPressed: () {
-                  // TODO: Implement call support functionality
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Theme.of(context).primaryColor, // Set background color
+                      Theme.of(context).primaryColor, 
                 ),
               ),
               ElevatedButton(
@@ -97,11 +97,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   style: TextStyle(color: Constants().p_button_text),
                 ),
                 onPressed: () {
-                  // TODO: Implement email support functionality
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Theme.of(context).primaryColor, // Set background color
+                      Theme.of(context).primaryColor,
                 ),
               ),
             ],

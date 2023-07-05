@@ -1,7 +1,7 @@
 import 'package:fast_track/constants/constants.dart';
-import 'package:fast_track/models/feed.dart';
-import 'package:fast_track/views/create_feed.dart';
-import 'package:fast_track/views/feedstab_view.dart';
+import 'package:fast_track/views/complaint_card.dart';
+import 'package:fast_track/views/incidents_list.dart';
+import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:flutter/material.dart';
 
 class FeedsScreen extends StatefulWidget {
@@ -33,9 +33,9 @@ class _FeedsScreenState extends State<FeedsScreen>
           controller: _tabController,
           indicatorColor: Colors.blue,
           tabs: const [
-            Tab(text: 'Public'),
+            Tab(text: 'Complaints'),
             Tab(
-              text: 'Official',
+              text: 'Incidents',
               icon: Icon(Icons.verified, color: Colors.blue),
             ),
             Tab(text: 'My Reports'),
@@ -44,110 +44,12 @@ class _FeedsScreenState extends State<FeedsScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          FeedsTabView(
-            feeds: [
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'John Doe',
-                timePosted: '2 hours ago',
-                status: 'Waiting',
-                title: 'Feed Title 1',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                voteCount: 10,
-              ),
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'John Doe',
-                timePosted: '2 hours ago',
-                status: 'Waiting',
-                title: 'Feed Title 1',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                voteCount: 10,
-              ),
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'John Doe',
-                timePosted: '2 hours ago',
-                status: 'Waiting',
-                title: 'Feed Title 1',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                voteCount: 10,
-              ),
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'John Doe',
-                timePosted: '2 hours ago',
-                status: 'Waiting',
-                title: 'Feed Title 1',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                voteCount: 10,
-              ),
-              // Add more feeds for the "Public" tab
-            ],
-          ),
-          FeedsTabView(
-            feeds: [
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'Jane Smith',
-                timePosted: '5 hours ago',
-                status: 'Handled',
-                title: 'Feed Title 2',
-                description:
-                    'Nulla facilisi. Sed aliquam nibh auctor mauris tincidunt, et mattis velit commodo.',
-                voteCount: 15,
-              ),
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'Jane Smith',
-                timePosted: '5 hours ago',
-                status: 'Handled',
-                title: 'Feed Title 2',
-                description:
-                    'Nulla facilisi. Sed aliquam nibh auctor mauris tincidunt, et mattis velit commodo.',
-                voteCount: 15,
-              ),
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'Jane Smith',
-                timePosted: '5 hours ago',
-                status: 'Handled',
-                title: 'Feed Title 2',
-                description:
-                    'Nulla facilisi. Sed aliquam nibh auctor mauris tincidunt, et mattis velit commodo.',
-                voteCount: 15,
-              ),
-              // Add more feeds for the "Official" tab
-            ],
-          ),
-          FeedsTabView(
-            feeds: [
-              FeedModel(
-                avatarUrl:
-                    'https://i.pinimg.com/736x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg',
-                name: 'Alice Johnson',
-                timePosted: '1 hour ago',
-                status: 'Waiting',
-                title: 'Feed Title 3',
-                description:
-                    'In eget dolor nisl. Sed tristique purus at sollicitudin convallis.',
-                voteCount: 8,
-              ),
-              // Add more feeds for the "My Reports" tab
-            ],
-          ),
+        children: const [
+          ComplaintCard(),
+          IncidentsList(),
+          Center(
+            child: Text("MY REPORTS"),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -157,11 +59,11 @@ class _FeedsScreenState extends State<FeedsScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateFeedScreen(),
+              builder: (context) => const MainPostScreen(),
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         backgroundColor: Constants().p_button,
       ),
     );

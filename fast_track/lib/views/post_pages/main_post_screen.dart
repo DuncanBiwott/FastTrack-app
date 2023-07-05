@@ -12,6 +12,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MainPostScreen extends StatefulWidget {
+  const MainPostScreen({super.key});
+
   @override
   _MainPostScreenState createState() => _MainPostScreenState();
 }
@@ -41,6 +43,7 @@ class _MainPostScreenState extends State<MainPostScreen>
 
   @override
   void initState() {
+    
     super.initState();
     _complaintController = TextEditingController();
     _complaintTitleController = TextEditingController();
@@ -76,69 +79,69 @@ class _MainPostScreenState extends State<MainPostScreen>
 
   //Geting the location
 
-  String? _currentAddress;
-  Position? _currentPosition;
+//   String? _currentAddress;
+//   Position? _currentPosition;
 
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+//   Future<bool> _handleLocationPermission() async {
+//     bool serviceEnabled;
+//     LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
-      return false;
-    }
-    return true;
-  }
+//     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+//     if (!serviceEnabled) {
+//       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+//           content: Text(
+//               'Location services are disabled. Please enable the services')));
+//       return false;
+//     }
+//     permission = await Geolocator.checkPermission();
+//     if (permission == LocationPermission.denied) {
+//       permission = await Geolocator.requestPermission();
+//       if (permission == LocationPermission.denied) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//             const SnackBar(content: Text('Location permissions are denied')));
+//         return false;
+//       }
+//     }
+//     if (permission == LocationPermission.deniedForever) {
+//       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+//           content: Text(
+//               'Location permissions are permanently denied, we cannot request permissions.')));
+//       return false;
+//     }
+//     return true;
+//   }
 
-  Future<void> _getCurrentPosition() async {
-    final hasPermission = await _handleLocationPermission();
+//   Future<void> _getCurrentPosition() async {
+//     final hasPermission = await _handleLocationPermission();
 
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setState(() => _currentPosition = position);
-      _getAddressFromLatLng(_currentPosition!);
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
+//     if (!hasPermission) return;
+//     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+//         .then((Position position) {
+//       setState(() => _currentPosition = position);
+//       _getAddressFromLatLng(_currentPosition!);
+//     }).catchError((e) {
+//       debugPrint(e);
+//     });
+//   }
 
-  Future<void> _getAddressFromLatLng(Position position) async {
-  try {
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      _currentPosition!.latitude,
-      _currentPosition!.longitude,
-    );
-    if (placemarks !=null &&placemarks.isNotEmpty) {
-      Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress =
-            '${place.street}';
-      });
-    }
-    print(_currentAddress);
-  } catch (e) {
-    debugPrint(e.toString());
-  }
-}
+//   Future<void> _getAddressFromLatLng(Position position) async {
+//   try {
+//     List<Placemark> placemarks = await placemarkFromCoordinates(
+//       _currentPosition!.latitude,
+//       _currentPosition!.longitude,
+//     );
+//     if (placemarks !=null &&placemarks.isNotEmpty) {
+//       Placemark place = placemarks[0];
+//       setState(() {
+//         _currentAddress =
+//             '${place.street}';
+//       });
+//     }
+//     print(_currentAddress);
+//   } catch (e) {
+//     debugPrint(e.toString());
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +300,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                 Icons.location_on,
                                 size: 32.0,
                               ),
-                              onPressed: () => _getCurrentPosition()),
+                              onPressed: (){}// => _getCurrentPosition()
+                              ),
                           IconButton(
                             icon: const Icon(Icons.photo_camera),
                             onPressed: () => _pickImage(ImageSource.camera),
@@ -459,7 +463,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                 Icons.location_on,
                                 size: 32.0,
                               ),
-                              onPressed: () => _getCurrentPosition()),
+                              onPressed: () {}//=> _getCurrentPosition()
+                              ),
                           IconButton(
                             icon: const Icon(Icons.photo_camera),
                             onPressed: () => _pickImage(ImageSource.camera),

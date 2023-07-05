@@ -20,7 +20,7 @@ class _CreateFeedScreenState extends State<CreateFeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Feed'),
+        title: const Text('Create Feed'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -48,28 +48,25 @@ class _CreateFeedScreenState extends State<CreateFeedScreen> {
                 String title = _titleController.text;
                 String description = _descriptionController.text;
 
-                // Handle feed submission
-                // Show a success message to the user
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Feed Posted'),
-                      content: Text('Your feed was posted successfully.'),
+                      title: const Text('Feed Posted'),
+                      content: const Text('Your feed was posted successfully.'),
                       actions: [
                         TextButton(
                           onPressed: () {
-// Close the dialog
                             Navigator.of(context).pop();
                           },
-                          child: Text('OK'),
+                          child: const Text('OK'),
                         ),
                       ],
                     );
                   },
                 );
               },
-              child: Text('Post Feed'),
+              child: const Text('Post Feed'),
             ),
           ],
         ),
