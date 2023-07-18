@@ -3,9 +3,11 @@ import 'package:fast_track/endpoints/endpoints.dart';
 import 'package:fast_track/models/complaint.dart';
 import 'package:fast_track/models/complaint_response.dart';
 import 'package:fast_track/services/api/authenticationService/interceptors/exceptions/dio_exception.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../api_key.dart';
+import '../../../views/login/login_screen.dart';
 
 class ComplaintClient {
   SharedPreferences? sharedPreferences;
@@ -20,7 +22,7 @@ class ComplaintClient {
         receiveTimeout: const Duration(milliseconds: EndPoints.receiveTimeout),
         responseType: ResponseType.json),
   );
-  Future<Response> addComplaint({required Complaint complaint}) async {
+  Future<Response> addComplaint({required Complaint complaint,required BuildContext? context}) async {
     Response response;
     try {
       // Retrieve token from SharedPreferences
@@ -47,7 +49,18 @@ class ComplaintClient {
           responseData['error'] == false &&
           responseData['message'] == "Complaint created successfully") {
         return response;
-      } else {
+      }else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
+    }
+       else {
         throw Exception('Failed to create Complaint');
       }
       // ignore: deprecated_member_use
@@ -60,7 +73,8 @@ class ComplaintClient {
   Future<List<ComplaintResponse>> getComplaints({
   required int perPage,
   required int page,
-  String? search
+  String? search,
+  required BuildContext? context,
 }) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -85,10 +99,21 @@ class ComplaintClient {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data["data"]; 
-        List<ComplaintResponse> complaints = responseData.map((complaint) => ComplaintResponse.fromJson(complaint)).toList();
+      final List<dynamic> responseData = response.data["data"];
+      List<ComplaintResponse> complaints = responseData
+          .map((complaint) => ComplaintResponse.fromJson(complaint))
+          .toList();
       return complaints;
-      
+    } else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
     } else {
       throw Exception('Failed to get Complaints');
     }

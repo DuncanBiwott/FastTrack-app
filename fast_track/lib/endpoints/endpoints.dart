@@ -13,6 +13,7 @@ class EndPoints{
   static const String incidentUrl="http://$ip_address/v1/api/incident";
   static const String complaintUrl="http://$ip_address/v1/api/complaint";
   static const String  locationUrl='https://geocodeapi.p.rapidapi.com/GetNearestCities';
+  static const String  eventUrl="http://$ip_address/v1/api/events";
 
 
   // receiveTimeout

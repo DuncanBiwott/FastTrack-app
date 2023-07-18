@@ -13,20 +13,20 @@ class _IncidentsListState extends State<IncidentsList> {
   Future<List<IncidentResponse>>? incidents;
   @override
   void initState() {
-   incidents=IncidentClient().getAllIncidents(perpage: 20, page: 1);
+   incidents=IncidentClient().getAllIncidents(perpage: 20, page: 1, context: context);
     super.initState();
   }
 
   onRefreshPage(){
     setState(() {
-      incidents=IncidentClient().getAllIncidents(perpage: 20, page: 1);
+      incidents=IncidentClient().getAllIncidents(perpage: 20, page: 1, context: context);
     });
   }
   @override
 Widget build(BuildContext context) {
   return Scaffold(
     body: FutureBuilder<List<IncidentResponse>>(
-      future:IncidentClient().getAllIncidents(perpage: 20, page: 1),
+      future:IncidentClient().getAllIncidents(perpage: 20, page: 1, context: context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -50,7 +50,7 @@ Widget build(BuildContext context) {
                   'ID: ${data[index].id}',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Title: ${data[index].title}',
                   style: TextStyle(fontSize: 18),

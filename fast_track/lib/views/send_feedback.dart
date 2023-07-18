@@ -9,31 +9,7 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   final TextEditingController _feedbackController = TextEditingController();
 
-  void _submitFeedback() {
-    String feedback = _feedbackController.text;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Thank you!'),
-          content: const Text('Your feedback has been submitted.'),
-          actions: [
-            TextButton(
-              child: Text(
-                'OK',
-                style: TextStyle(color: Constants().p_button_text),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Clear the feedback text field
-                _feedbackController.clear();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -59,14 +35,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                child: Text(
-                  'Submit Feedback',
-                  style: TextStyle(color: Constants().p_button_text),
-                ),
-                onPressed: _submitFeedback,
+                onPressed: (){},
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).primaryColor, 
+                ),
+                child: Text(
+                  'Submit Feedback',
+                  style: TextStyle(color: Constants().p_button_text),
                 ),
               ),
               const SizedBox(height: 32.0),
@@ -79,10 +55,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
               const Text('Email: support@example.com'),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                child: Text(
-                  'Call Support',
-                  style: TextStyle(color: Constants().p_button_text),
-                ),
                 onPressed: () {
                   
                 },
@@ -90,18 +62,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   backgroundColor:
                       Theme.of(context).primaryColor, 
                 ),
-              ),
-              ElevatedButton(
                 child: Text(
-                  'Email Support',
+                  'Call Support',
                   style: TextStyle(color: Constants().p_button_text),
                 ),
+              ),
+              ElevatedButton(
                 onPressed: () {
                   
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).primaryColor,
+                ),
+                child: Text(
+                  'Email Support',
+                  style: TextStyle(color: Constants().p_button_text),
                 ),
               ),
             ],

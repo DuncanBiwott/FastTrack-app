@@ -1,9 +1,9 @@
 import 'package:fast_track/constants/constants.dart';
+import 'package:fast_track/views/chat_screen.dart';
 import 'package:fast_track/views/home.dart';
 import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:fast_track/views/profile_page.dart';
 import 'package:fast_track/views/search.dart';
-import 'package:fast_track/views/send_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -21,9 +21,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Widget> _pages ()=><Widget> [
     HomeScreen(),
-    FeedbackPage(),
     FeedsScreen(),
-    const ProfileManagementPage(),
+    const ChatScreen(),
+    FeedsScreen(),
+    const Profile(),
    
     
     
@@ -42,17 +43,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
          automaticallyImplyLeading: false,
-        title: const Row(
-          children: [
-            CircleAvatar(
-              radius: 16.0,
-              backgroundImage: NetworkImage(
-                  'https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg'),
-            ),
-            SizedBox(width: 8.0),
-            Text('Dan'),
-          ],
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -101,7 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MainPostScreen(),
+              builder: (context) => const MainPostScreen(),
             ),
           );
         },
@@ -118,18 +108,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.house,size: 16,),
-                label: "Dashboard",
+                label: "Home",
               ),
               
               BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.rss,size: 16,
                 ),
-                label: "Feedback",
+                label: "Feed",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.commentDots,size: 16,
+                icon: Icon(FontAwesomeIcons.comments,size: 16,
                 ),
-                label: "Feeds",
+                label: "Chatbot",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.clockRotateLeft,size: 16,
+                ),
+                label: "History",
               ),
               BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.user,size: 16,

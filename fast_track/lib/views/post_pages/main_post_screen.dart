@@ -198,6 +198,7 @@ class _MainPostScreenState extends State<MainPostScreen>
 
                                   try {
                                     await _complaintClient.addComplaint(
+                                      context: context,
                                         complaint: Complaint(
                                       title: _complaintTitleController!.text
                                           .trim(),
@@ -373,7 +374,10 @@ class _MainPostScreenState extends State<MainPostScreen>
                                         DateTime.now(),
                                         "Mombasa",
                                         "CRITICAL",
-                                        _images);
+                                        _images,
+                                        context
+                                        
+                                        );
                                     _showSuccessMessage(
                                         'Incident Posted Successfully',
                                         Colors.green);

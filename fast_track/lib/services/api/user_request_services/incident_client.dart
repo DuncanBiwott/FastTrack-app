@@ -3,15 +3,19 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fast_track/endpoints/endpoints.dart';
+import 'package:fast_track/models/event_response.dart';
 import 'package:fast_track/services/api/authenticationService/interceptors/exceptions/dio_exception.dart';
+import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/incidents_response.dart';
+import '../../../views/login/login_screen.dart';
 
 class IncidentClient {
   SharedPreferences? sharedPreferences;
   final String _baseUrl = EndPoints.incidentUrl;
+  final String _eventUrl = EndPoints.eventUrl;
 
   final Dio _dio = Dio(
     BaseOptions(
@@ -23,7 +27,7 @@ class IncidentClient {
   );
 
   Future<List<IncidentResponse>> getAllIncidents(
-      {required int perpage, required int page, String? search}) async {
+      {required int perpage, required int page, String? search,required BuildContext? context}) async {
     Response response;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,7 +53,65 @@ class IncidentClient {
         final List<dynamic> responseData = response.data["data"];
          List<IncidentResponse> incidents = responseData.map((incident) => IncidentResponse.fromJson(incident)).toList();
       return incidents;
-    } else {
+    }else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
+    }
+     else {
+      throw Exception('Failed to get Complaints');
+    }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+    Future<List<EventResponse>> getAllEvents(
+      {required int perpage, required int page, String? search,required BuildContext? context}) async {
+    Response response;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
+
+      if (token == null && token!.isEmpty) {
+        throw Exception('Token not found');
+      }
+      final options = Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      response = await _dio.get(_eventUrl,
+          queryParameters: {'per_page': perpage, 'page': page},
+          options: options);
+
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data["data"];
+         List<EventResponse> events = responseData.map((event) => EventResponse.fromJson(event)).toList();
+      return events;
+    }else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
+    }
+     else {
       throw Exception('Failed to get Complaints');
     }
     } on DioError catch (e) {
@@ -64,7 +126,9 @@ class IncidentClient {
       DateTime submissionDateTime,
       String location,
       String status,
-      List<File> images) async {
+      List<File> images,
+      BuildContext? context
+      ) async {
     Response response;
     try {
       // Retrieve token from SharedPreferences
@@ -127,7 +191,17 @@ class IncidentClient {
           responseData['error'] == false &&
           responseData['message'] == "Incident created successfully") {
         return response;
-      } else {
+      }else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
+    } else {
         throw Exception('Failed to submit Incident');
       }
     } catch (error) {

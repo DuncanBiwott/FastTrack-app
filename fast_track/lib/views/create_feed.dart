@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CreateFeedScreen extends StatefulWidget {
+  const CreateFeedScreen({super.key});
+
   @override
   _CreateFeedScreenState createState() => _CreateFeedScreenState();
 }
@@ -28,14 +30,14 @@ class _CreateFeedScreenState extends State<CreateFeedScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Title',
               ),
             ),
             SizedBox(height: 16.0),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Description',
               ),
             ),

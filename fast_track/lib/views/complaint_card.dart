@@ -23,21 +23,21 @@ class _ComplaintCardState extends State<ComplaintCard> {
 
   @override
   void initState() {
-    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20);
+    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20, context: context);
     super.initState();
   }
 
 
 onRefreshPage(){
   setState(() {
-    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20);
+    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20, context: context);
   });
 }
  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<ComplaintResponse>>(
-      future:ComplaintClient().getComplaints( page: 1, perPage: 20),
+      future:ComplaintClient().getComplaints( page: 1, perPage: 20, context: context),
       builder: (context, snapshot) { 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(

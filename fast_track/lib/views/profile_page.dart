@@ -1,207 +1,271 @@
-import 'package:fast_track/constants/constants.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ProfileManagementPage extends StatefulWidget {
-  const ProfileManagementPage({super.key});
+class Profile extends StatefulWidget {
+  const Profile({super.key});
 
   @override
-  _ProfileManagementPageState createState() => _ProfileManagementPageState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileManagementPageState extends State<ProfileManagementPage> {
-  String _name = 'Dan Biwott';
-  String _email = 'danbiwott77@gmail.com';
-  bool _isEmailNotificationEnabled = true;
-  bool _isPushNotificationEnabled = false;
-  bool _isSMSNotificationEnabled = true;
-
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController.text = _name;
-    _emailController.text = _email;
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  void _updateName(String newName) {
-    setState(() {
-      _name = newName;
-      _nameController.text = _name;
-    });
-  }
-
-  void _updateEmail(String newEmail) {
-    setState(() {
-      _email = newEmail;
-      _emailController.text = _email;
-    });
-  }
-
-  void _toggleEmailNotification(bool value) {
-    setState(() {
-      _isEmailNotificationEnabled = value;
-    });
-  }
-
-  void _togglePushNotification(bool value) {
-    setState(() {
-      _isPushNotificationEnabled = value;
-    });
-  }
-
-  void _toggleSMSNotification(bool value) {
-    setState(() {
-      _isSMSNotificationEnabled = value;
-    });
-  }
-
-  void _showNameEditDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Name'),
-          content: TextField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              hintText: 'Enter your name',
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Constants().s_button, // Set background color
-              ),
-            ),
-            TextButton(
-              child: Text('Save'),
-              onPressed: () {
-                _updateName(_nameController.text);
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).primaryColor, // Set background color
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showEmailEditDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Email'),
-          content: TextField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              hintText: 'Enter your email',
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Constants().s_button, // Set background color
-              ),
-            ),
-            TextButton(
-              child: Text('Save'),
-              onPressed: () {
-                _updateEmail(_emailController.text);
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).primaryColor, // Set background color
-              ),
-            ),
-          ],
-        );
-      },
-    );
+class _ProfileState extends State<Profile> {
+  Future _showSuccessMessage(String massage, Color color) {
+    return Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      backgroundColor: color,
+      message: massage,
+      duration: const Duration(seconds: 3),
+    ).show(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Personal Information',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          children: [
+            Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.angleLeft,
+                      size: 24,
+                    )),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0),
+                  child: Text(
+                    'My Profile',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(color: Colors.grey),
               ),
-              SizedBox(height: 16.0),
-              ListTile(
-                title: Text('Name'),
-                subtitle: Text(_name),
-                trailing: IconButton(
-                    icon: Icon(Icons.edit), onPressed: _showNameEditDialog),
-              ),
-              ListTile(
-                title: Text('Email'),
-                subtitle: Text(_email),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: _showEmailEditDialog,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: Icon(
+                    FontAwesomeIcons.user,
+                    size: 32,
+                  ),
+                  trailing: Icon(
+                    FontAwesomeIcons.angleRight,
+                  ),
+                  title: Row(
+                    children: [
+                      Text("Email"),
+                      const Icon(
+                        Icons.verified,
+                        color: Colors.blue,
+                      )
+                    ],
+                  ),
+                  onTap: () {},
                 ),
               ),
-              SizedBox(height: 32.0),
-              Text(
-                'Communication Preferences',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            Divider(),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  leading: Icon(
+                    FontAwesomeIcons.creditCard,
+                    size: 32,
+                  ),
+                  trailing: const Icon(
+                    FontAwesomeIcons.angleRight,
+                  ),
+                  title: Text("Payments & purchases"),
+                  onTap: () {},
+                ),
               ),
-              SizedBox(height: 16.0),
-              SwitchListTile(
-                title: Text('Email Notifications'),
-                value: _isEmailNotificationEnabled,
-                onChanged: _toggleEmailNotification,
+            ),
+            Divider(),
+            const Text(
+              "Settings & Preferences",
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  leading: Icon(
+                    Icons.notifications,
+                  ),
+                  title: const Text(
+                    'Notification',
+                  ),
+                  trailing: Icon(FontAwesomeIcons.angleRight),
+                  onTap: () {},
+                ),
               ),
-              SwitchListTile(
-                title: Text('Push Notifications'),
-                value: _isPushNotificationEnabled,
-                onChanged: _togglePushNotification,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  leading: const Icon(Icons.dark_mode),
+                  title: const Text(
+                    'Dark Mode',
+                  ),
+                  trailing: Switch(
+                    value: true,
+                    onChanged: (value) {},
+                  ),
+                ),
               ),
-              SwitchListTile(
-                title: Text('SMS Notifications'),
-                value: _isSMSNotificationEnabled,
-                onChanged: _toggleSMSNotification,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  title: const Text(
+                    'Language',
+                  ),
+                  leading: const Icon(
+                    FontAwesomeIcons.language,
+                  ),
+                  trailing: const Icon(
+                    FontAwesomeIcons.angleRight,
+                  ),
+                  onTap: () {},
+                ),
               ),
-              SizedBox(height: 32.0),
-              Text(
-                'Activity History',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  title: const Text(
+                    'Security',
+                  ),
+                  leading: Icon(
+                    FontAwesomeIcons.shield,
+                  ),
+                  trailing: const Icon(
+                    FontAwesomeIcons.angleRight,
+                  ),
+                  onTap: () {},
+                ),
               ),
-              SizedBox(height: 16.0),
-              // TODO: Implement activity history section
-            ],
-          ),
+            ),
+            Divider(),
+            //Support Section
+            Text(
+              'Support',
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  title: Text('Help center'),
+                  leading: const Icon(
+                    FontAwesomeIcons.book,
+                  ),
+                  trailing: Icon(
+                    FontAwesomeIcons.angleRight,
+                  ),
+                  onTap: () {},
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  title: const Text('Report a bug'),
+                  leading: Icon(
+                    FontAwesomeIcons.flag,
+                  ),
+                  trailing: Icon(
+                    FontAwesomeIcons.angleRight,
+                  ),
+                  onTap: () {},
+                ),
+              ),
+            ),
+            Divider(),
+            TextButton(
+                onPressed: () async {
+                },
+                child: const Row(
+                  children: [
+                    Icon(FontAwesomeIcons.arrowRightToBracket),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Logout",
+                      style: TextStyle(
+                          letterSpacing: 0.5,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ))
+          ],
         ),
       ),
-    );
+    ));
   }
 }
