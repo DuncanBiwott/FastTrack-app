@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class ChatMessage extends StatelessWidget {
   final String text;
   final bool isUserMessage;
+  final bool isLoading;
 
-  ChatMessage({required this.text, required this.isUserMessage});
+  ChatMessage({required this.text, required this.isUserMessage,  required this.isLoading});
 
   @override
   Widget build(BuildContext context) {

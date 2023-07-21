@@ -2,6 +2,8 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../services/api/authenticationService/loginService/login_dio_client.dart';
+
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -234,7 +236,7 @@ class _ProfileState extends State<Profile> {
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: ListTile(
                   title: const Text('Report a bug'),
-                  leading: Icon(
+                  leading: const Icon(
                     FontAwesomeIcons.flag,
                   ),
                   trailing: Icon(
@@ -247,10 +249,12 @@ class _ProfileState extends State<Profile> {
             Divider(),
             TextButton(
                 onPressed: () async {
+                  LoginDioClient().logout(context);
                 },
+                
                 child: const Row(
                   children: [
-                    Icon(FontAwesomeIcons.arrowRightToBracket),
+                    Icon(FontAwesomeIcons.arrowRightToBracket,color: Colors.red,),
                     SizedBox(
                       width: 10,
                     ),
@@ -259,6 +263,7 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(
                           letterSpacing: 0.5,
                           fontSize: 24,
+                          color: Colors.red,
                           fontWeight: FontWeight.bold),
                     )
                   ],
