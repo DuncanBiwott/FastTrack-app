@@ -1,8 +1,9 @@
 import 'package:fast_track/constants/constants.dart';
-import 'package:fast_track/views/chat_screen.dart';
+import 'package:fast_track/models/event_response.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-import 'event_card.dart';
+import '../services/api/user_request_services/incident_client.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,19 +13,31 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+Future<List<EventResponse>>? eventsData;
 
+  @override
+  void initState() {
+    super.initState();
+    eventsData=IncidentClient().getAllEvents(perpage: 10,page: 1, context: context);
+
+  }
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
 
-  Widget buildPage(Text message, Color color) {
+   
+  Widget buildPage(Text message, String image) {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: color,
+        image: DecorationImage(
+          image: NetworkImage(image),
+          fit: BoxFit.cover,
+         
+        ),
       ),
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,9 +67,134 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _showOverlay(EventResponse event) {
+    final overlay = Overlay.of(context);
+   late OverlayEntry overlayEntry;
+    DateTime parsedDate = DateTime.parse(event.eventDateTime!);
+    String formattedDate = DateFormat('EEEE, d MMMM hh:mm a y').format(parsedDate);
+
+    Widget overlayContent = Container(
+      alignment: Alignment.center,
+      height: 500,
+      width: 500,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          width: 250,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                child: Image.network(
+                  event.imageUrl!,
+                  fit: BoxFit.cover,
+                  height: 150,
+                  width: double.infinity,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  event.title!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.blue),
+                      ),
+                      onPressed: () {
+                        overlayEntry.remove(); // Remove the overlay when the button is pressed
+                      },
+                      child: const Text(
+                        'Close',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 100, 
+        left: 50,
+        child: overlayContent,
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+         title: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white70,
+                ),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search...",
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                        ),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+      ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 12.0, right: 8.0),
@@ -104,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Constants().dot1),
+                                        "https://img.freepik.com/free-vector/abstract-classic-blue-screensaver_23-2148421853.jpg?size=626&ext=jpg",),
                                     buildPage(
                                         Text(
                                           "Get important announcements and stay informed about our services. Unlock the full potential with upcoming events and updates.",
@@ -114,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Constants().dot2),
+                                        "https://img.freepik.com/free-vector/realistic-neon-lights-background_23-2148907367.jpg?size=626&ext=jpg"),
                                     buildPage(
                                         Text(
                                           "Stay connected and informed about our services. Industry insights, expert tips, events, and partnerships to keep you ahead",
@@ -124,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Constants().dot3),
+                                        "https://img.freepik.com/free-vector/halftone-background-with-circles_23-2148907689.jpg?size=626&ext=jpg"),
                                   ],
                                 ),
                               ),
@@ -153,47 +291,105 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                Container(
-                  height: 240.0,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: const [
-                      EventCard(
-                        title: 'Event 1',
-                        date: 'May 30, 2023',
+                FutureBuilder<List<EventResponse>>(
+  future: IncidentClient().getAllEvents(perpage: 10, page: 1, context: context),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (snapshot.hasError) {
+      return Center(
+        child: Text('Error: ${snapshot.error}'),
+      );
+    } else {
+      List<EventResponse> data = snapshot.data!;
+      return SizedBox(
+        height: 280,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            DateTime parsedDate = DateTime.parse(data[index].eventDateTime!);
+             String formattedDate = DateFormat('EEEE, d MMMM hh:mm a y').format(parsedDate);
+            return Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                width: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
                       ),
-                      EventCard(
-                        title: 'Event 2',
-                        date: 'June 5, 2023',
+                      child: Image.network(
+                        data[index].imageUrl!,
+                        fit: BoxFit.cover,
+                        height: 150,
+                        width: double.infinity,
                       ),
-                      EventCard(
-                        title: 'Event 3',
-                        date: 'June 10, 2023',
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        data[index].title!,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              formattedDate,
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.blue),
+                            ),
+                            onPressed: () {
+                              _showOverlay(data[index]);
+                            },
+                            child: const Text(
+                              'View Details',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+  },
+),
+
                 const SizedBox(height: 16.0),
               ],
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ChatScreen()),
-            );
-          },
-          backgroundColor: Theme.of(context).primaryColor,
-          label: Text(
-            'Chat',
-            style: TextStyle(color: Constants().p_button_text),
-          ),
-          icon: Icon(
-            Icons.send,
-            color: Constants().p_button_text,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat);
+        )
+
+    );
+      
   }
 }

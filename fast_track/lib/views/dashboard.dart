@@ -3,7 +3,6 @@ import 'package:fast_track/views/chat_screen.dart';
 import 'package:fast_track/views/home.dart';
 import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:fast_track/views/profile_page.dart';
-import 'package:fast_track/views/search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -44,18 +43,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
          automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SearchPage(),
-                ),
-              );
-            },
-          ),
-         const  SizedBox(width: 8.0),
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {

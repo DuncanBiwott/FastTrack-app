@@ -2,6 +2,7 @@ import 'package:fast_track/constants/constants.dart';
 import 'package:fast_track/models/complaint_response.dart';
 import 'package:fast_track/services/api/user_request_services/complaint_client.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ComplaintCard extends StatefulWidget {
 
@@ -52,6 +53,9 @@ onRefreshPage(){
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
+
+              DateTime parsedDate = DateTime.parse(data[index].date);
+             String formattedDate = DateFormat('EEEE, d MMMM').format(parsedDate);
               return Card(
       elevation: 2.0,
       shape: RoundedRectangleBorder(
@@ -76,7 +80,7 @@ onRefreshPage(){
                       ),
                     ),
                     Text(
-                      data[index].date,
+                      formattedDate,
                       style: const TextStyle(
                         fontSize: 12.0,
                         color: Colors.grey,
@@ -95,7 +99,7 @@ onRefreshPage(){
                 ),
               ],
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               data[index].title,
               style: const TextStyle(
@@ -103,7 +107,7 @@ onRefreshPage(){
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               data[index].description,
               style: const TextStyle(
