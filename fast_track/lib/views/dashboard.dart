@@ -3,10 +3,10 @@ import 'package:fast_track/views/chat_screen.dart';
 import 'package:fast_track/views/home.dart';
 import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:fast_track/views/profile_page.dart';
+import 'package:fast_track/views/send_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../services/api/authenticationService/loginService/login_dio_client.dart';
 import 'feeds_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -23,6 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     FeedsScreen(),
     const ChatScreen(),
     FeedsScreen(),
+    FeedbackPage(),
     const Profile(),
    
     
@@ -40,36 +41,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-          
-            },
-          ),
-          const  SizedBox(width: 8.0),
-    PopupMenuButton(
-      itemBuilder: (BuildContext context) {
-        return [
-          const PopupMenuItem(
-            value: 'logout',
-            child: Icon(Icons.logout),
-          ),
-        ];
-      },
-      onSelected: (value) {
-        if (value == 'logout') {
-           LoginDioClient().logout(context);
-         
-          
-        }
-      },
-    ),
-  
-        ],
-      ),
       
       body: _pages()[_selectedIndex],
       floatingActionButton: FloatingActionButton(
@@ -112,6 +83,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icon(FontAwesomeIcons.clockRotateLeft,size: 16,
                 ),
                 label: "History",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.comment,size: 16,
+                ),
+                label: "Feedback",
               ),
               BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.user,size: 16,

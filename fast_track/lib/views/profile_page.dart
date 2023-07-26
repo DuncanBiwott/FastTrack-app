@@ -29,54 +29,51 @@ class _ProfileState extends State<Profile> {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      FontAwesomeIcons.angleLeft,
-                      size: 24,
-                    )),
-                const Padding(
-                  padding: EdgeInsets.only(left: 30.0),
-                  child: Text(
-                    'My Profile',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            const Padding(
+              padding: EdgeInsets.only(left: 30.0),
+              child: Text(
+                'My Profile',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+              child: Container(
+                height: 280,
+                width: MediaQuery.of(context).size.width*0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: Icon(
+                        FontAwesomeIcons.user,
+                        size: 32,
+                      ),
+                      trailing: Icon(
+                        FontAwesomeIcons.angleRight,
+                      ),
+                      title: Row(
+                        children: [
+                          Text("Email"),
+                          const Icon(
+                            Icons.verified,
+                            color: Colors.blue,
+                          )
+                        ],
+                      ),
+                      onTap: () {},
                     ),
                   ),
-                ),
-              ],
-            ),
-            Container(
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(color: Colors.grey),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Icon(
-                    FontAwesomeIcons.user,
-                    size: 32,
-                  ),
-                  trailing: Icon(
-                    FontAwesomeIcons.angleRight,
-                  ),
-                  title: Row(
-                    children: [
-                      Text("Email"),
-                      const Icon(
-                        Icons.verified,
-                        color: Colors.blue,
-                      )
-                    ],
-                  ),
-                  onTap: () {},
                 ),
               ),
             ),

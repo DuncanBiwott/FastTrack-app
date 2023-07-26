@@ -3,6 +3,7 @@ import 'package:fast_track/endpoints/endpoints.dart';
 import 'package:fast_track/models/register_request.dart';
 import 'package:fast_track/services/api/authenticationService/interceptors/exceptions/dio_exception.dart';
 
+import '../../../../models/password_reset.dart';
 import '../interceptors/application_interceptor.dart';
 
 class RegisterDioClient {
@@ -49,11 +50,11 @@ Future<Response>register({required UserRequest userDetails})async{
 }
 
 
-Future<Response>forgotPass({required String  token})async{
+Future<Response>forgotPass({required PasswordResetRequest  loginRequest})async{
   Response response;
   try{
      response=await _dio.post(EndPoints.forgortPassUrl,
-    data: token,
+    data: loginRequest.toJson(),
     options: options
     );
 

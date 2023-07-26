@@ -41,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
     };
 
     Response response = await dio.post(
-      'https://auto-chat-bot.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=fast-track-Bot&api-version=2021-10-01&deploymentName=production',
+      'https://auto-chat-bot.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=quick-chat-app&api-version=2021-10-01&deploymentName=production',
       options: Options(headers: headers),
       data: jsonEncode(requestBody),
     );

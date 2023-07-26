@@ -10,12 +10,14 @@ import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../models/incidents_response.dart';
+import '../../../models/notification_response.dart';
 import '../../../views/login/login_screen.dart';
 
 class IncidentClient {
   SharedPreferences? sharedPreferences;
   final String _baseUrl = EndPoints.incidentUrl;
   final String _eventUrl = EndPoints.eventUrl;
+  final String _notificationUrl = EndPoints.notificationUrl;
 
   final Dio _dio = Dio(
     BaseOptions(
@@ -99,6 +101,98 @@ class IncidentClient {
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data["data"];
          List<EventResponse> events = responseData.map((event) => EventResponse.fromJson(event)).toList();
+      return events;
+    }else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
+    }
+     else {
+      throw Exception('Failed to get Complaints');
+    }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  Future<List<EventResponse>> getAllEventsByCategory({
+  String? search,
+  String? category,
+  required BuildContext? context,
+}) async {
+  Response response;
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('fast_token');
+
+    if (token == null && token!.isEmpty) {
+      throw Exception('Token not found');
+    }
+    final options = Options(
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+   
+
+    response = await _dio.get(EndPoints.eventCategory,queryParameters: {"category":category}, options: options);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = response.data["data"];
+      List<EventResponse> events = responseData.map((event) => EventResponse.fromJson(event)).toList();
+      return events;
+    } else if (response.statusCode == 401) {
+      await prefs.remove('fast_token');
+      Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+      throw Exception('Unauthorized');
+    } else {
+      throw Exception('Failed to get Complaints');
+    }
+  } on DioError catch (e) {
+    final errorMessage = DioExceptions.fromDioError(e).toString();
+    throw errorMessage;
+  }
+}
+
+  Future<List<NotificationResponse>> getAllNotifications(
+      {required int perpage, required int page,required BuildContext? context}) async {
+    Response response;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
+
+      if (token == null && token!.isEmpty) {
+        throw Exception('Token not found');
+      }
+      final options = Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      response = await _dio.get(_notificationUrl,
+          queryParameters: {'per_page': perpage, 'page': page},
+          options: options);
+
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data["data"];
+         List<NotificationResponse> events = responseData.map((event) => NotificationResponse.fromJson(event)).toList();
       return events;
     }else if (response.statusCode == 401) {
     

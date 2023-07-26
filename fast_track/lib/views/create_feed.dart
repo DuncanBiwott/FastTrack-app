@@ -8,8 +8,8 @@ class CreateFeedScreen extends StatefulWidget {
 }
 
 class _CreateFeedScreenState extends State<CreateFeedScreen> {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void dispose() {
@@ -34,17 +34,17 @@ class _CreateFeedScreenState extends State<CreateFeedScreen> {
                 labelText: 'Title',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(
                 labelText: 'Description',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor:Theme.of(context).primaryColor, // Set background color
+                backgroundColor:Theme.of(context).primaryColor, 
               ),
               onPressed: () {
                 String title = _titleController.text;

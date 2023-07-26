@@ -35,6 +35,99 @@ onRefreshPage(){
   });
 }
  
+
+  void _showDetailsBottomSheet(BuildContext context, ComplaintResponse dataItem) {
+    DateTime parsedDate = DateTime.parse(dataItem.date);
+             String formattedDate = DateFormat('EEEE, d MMMM').format(parsedDate);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16.0),
+                const Center(
+                  child: CircleAvatar(
+                    radius: 48.0,
+                    backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png"),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  dataItem.user["username"],
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  dataItem.title,
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  dataItem.description,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "From ${dataItem.location}",
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Status: ${dataItem.status}",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: dataItem.status == 'OPEN' ? Colors.orange : Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                const Icon(
+                  Icons.thumb_up,
+                  size: 24.0,
+                  color: Colors.grey,
+                ),
+                
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<ComplaintResponse>>(
@@ -56,7 +149,7 @@ onRefreshPage(){
 
               DateTime parsedDate = DateTime.parse(data[index].date);
              String formattedDate = DateFormat('EEEE, d MMMM').format(parsedDate);
-              return Card(
+      return Card(
       elevation: 2.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -68,6 +161,12 @@ onRefreshPage(){
           children: [
             Row(
               children: [
+                const CircleAvatar(
+                  radius: 16.0,
+                  backgroundImage: NetworkImage(
+                    "https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png",
+                  ),
+                ),
                
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,13 +188,24 @@ onRefreshPage(){
                   ],
                 ),
                 Spacer(),
-                Text(
-                  data[index].status,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: data[index].status == 'OPEN' ? Colors.orange : Colors.green,
-                  ),
+                Row(
+                  
+                  children: [
+                    Text(data[index].location,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                        const SizedBox(width: 8.0,),
+                    Text(
+                      data[index].status,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                        color: data[index].status == 'OPEN' ? Colors.orange : Colors.green,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -118,27 +228,25 @@ onRefreshPage(){
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 16.0),
-            Row(
-              children: [
-                const Icon(
-                  Icons.thumb_up,
-                  size: 16.0,
-                  color: Colors.grey,
-                ),
-                const SizedBox(width: 4.0),
-               
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-               
-                  },
-                  style: ElevatedButton.styleFrom(
-                backgroundColor:Constants().s_button, 
-              ),
-                  child: Text('View Details',style: TextStyle(color: Constants().s_button_text),),
-                ),
-              ],
+            const Icon(
+              Icons.thumb_up,
+              size: 16.0,
+              color: Colors.grey,
             ),
+            const SizedBox(width: 4.0),
+             Center(
+               child: ElevatedButton(
+                    onPressed: () {
+                      _showDetailsBottomSheet(context, data[index]);
+
+                 
+                    },
+                    style: ElevatedButton.styleFrom(
+                  backgroundColor:Constants().s_button, 
+                ),
+                    child: Text('View Details',style: TextStyle(color: Constants().s_button_text),),
+                  ),
+             ),
           ],
         ),
       ),

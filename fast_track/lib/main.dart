@@ -11,7 +11,6 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Dashboard',
       builder: (BuildContext context, Widget? child) {
         return Semantics(
           child: child!,
@@ -19,10 +18,6 @@ class MainApp extends StatelessWidget {
       },
       theme: ThemeData(
         useMaterial3: true,
-        appBarTheme: AppBarTheme(
-          color: Constants().p_button,
-          elevation: 0,
-        ),
         primaryColor: Constants().p_button, 
         textTheme: TextTheme(
           titleLarge: TextStyle(
