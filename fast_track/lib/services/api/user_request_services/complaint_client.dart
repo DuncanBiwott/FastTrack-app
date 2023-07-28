@@ -15,6 +15,7 @@ class ComplaintClient {
   final String _baseUrl = EndPoints.complaintUrl;
   final String _locationUrl = EndPoints.locationUrl;
   final String _feedbackUrl = EndPoints.feedbackUrl;
+  final String _profileUrl = EndPoints.profileUrl;
 
   final Dio _dio = Dio(
     BaseOptions(
@@ -24,7 +25,8 @@ class ComplaintClient {
         receiveTimeout: const Duration(milliseconds: EndPoints.receiveTimeout),
         responseType: ResponseType.json),
   );
-  Future<Response> addComplaint({required Complaint complaint,required BuildContext? context}) async {
+  Future<Response> addComplaint(
+      {required Complaint complaint, required BuildContext? context}) async {
     Response response;
     try {
       // Retrieve token from SharedPreferences
@@ -51,18 +53,16 @@ class ComplaintClient {
           responseData['error'] == false &&
           responseData['message'] == "Complaint created successfully") {
         return response;
-      }else if (response.statusCode == 401) {
-    
-      await prefs.remove('fast_token');
+      } else if (response.statusCode == 401) {
+        await prefs.remove('fast_token');
 
-    Navigator.pushReplacement(
-        context!,
-        MaterialPageRoute(builder: (BuildContext context) => const Login()),
-      );
+        Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+        );
 
-      throw Exception('Unauthorized');
-    }
-       else {
+        throw Exception('Unauthorized');
+      } else {
         throw Exception('Failed to create Complaint');
       }
       // ignore: deprecated_member_use
@@ -72,7 +72,9 @@ class ComplaintClient {
     }
   }
 
-  Future<Response> sendFeedBack({required FeedbackRequest feedbackRequest,required BuildContext? context}) async {
+  Future<Response> sendFeedBack(
+      {required FeedbackRequest feedbackRequest,
+      required BuildContext? context}) async {
     Response response;
     try {
       // Retrieve token from SharedPreferences
@@ -90,8 +92,8 @@ class ComplaintClient {
         },
       );
 
-      response =
-          await _dio.post(_feedbackUrl, data: feedbackRequest.toJson(), options: options);
+      response = await _dio.post(_feedbackUrl,
+          data: feedbackRequest.toJson(), options: options);
 
       final responseData = response.data;
       if (response.statusCode == 200 &&
@@ -99,18 +101,16 @@ class ComplaintClient {
           responseData['error'] == false &&
           responseData['message'] == "FeedBack Received Successfully") {
         return response;
-      }else if (response.statusCode == 401) {
-    
-      await prefs.remove('fast_token');
+      } else if (response.statusCode == 401) {
+        await prefs.remove('fast_token');
 
-    Navigator.pushReplacement(
-        context!,
-        MaterialPageRoute(builder: (BuildContext context) => const Login()),
-      );
+        Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+        );
 
-      throw Exception('Unauthorized');
-    }
-       else {
+        throw Exception('Unauthorized');
+      } else {
         throw Exception('Failed to send FeedBack');
       }
       // ignore: deprecated_member_use
@@ -121,58 +121,100 @@ class ComplaintClient {
   }
 
   Future<List<ComplaintResponse>> getComplaints({
-  required int perPage,
-  required int page,
-  String? search,
-  required BuildContext? context,
-}) async {
-  try {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('fast_token');
+    required int perPage,
+    required int page,
+    String? search,
+    required BuildContext? context,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
 
-    if (token == null || token.isEmpty) {
-      throw Exception('Token not found');
-    }
+      if (token == null || token.isEmpty) {
+        throw Exception('Token not found');
+      }
 
-    final options = Options(
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    Response response = await _dio.get(
-      _baseUrl,
-      queryParameters: {'per_page': perPage, 'page': page},
-      options: options,
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data["data"];
-      List<ComplaintResponse> complaints = responseData
-          .map((complaint) => ComplaintResponse.fromJson(complaint))
-          .toList();
-      return complaints;
-    } else if (response.statusCode == 401) {
-    
-      await prefs.remove('fast_token');
-
-    Navigator.pushReplacement(
-        context!,
-        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      final options = Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
 
-      throw Exception('Unauthorized');
-    } else {
-      throw Exception('Failed to get Complaints');
-    }
-  } on DioError catch (e) {
-    final errorMessage = DioExceptions.fromDioError(e).toString();
-    throw Exception(errorMessage);
-  }
-}
+      Response response = await _dio.get(
+        _baseUrl,
+        queryParameters: {'per_page': perPage, 'page': page},
+        options: options,
+      );
 
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data["data"];
+        List<ComplaintResponse> complaints = responseData
+            .map((complaint) => ComplaintResponse.fromJson(complaint))
+            .toList();
+        return complaints;
+      } else if (response.statusCode == 401) {
+        await prefs.remove('fast_token');
+
+        Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+        );
+
+        throw Exception('Unauthorized');
+      } else {
+        throw Exception('Failed to get Complaints');
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw Exception(errorMessage);
+    }
+  }
+
+  Future<Response<dynamic>> getProfile({
+    required BuildContext? context,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Token not found');
+      }
+
+      final options = Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      Response response = await _dio.get(
+        _profileUrl,
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        return response;
+      } else if (response.statusCode == 401) {
+        await prefs.remove('fast_token');
+
+        Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+        );
+
+        throw Exception('Unauthorized');
+      } else {
+        throw Exception('Failed to get Complaints');
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw Exception(errorMessage);
+    }
+  }
 
   Future<String> getLocation(
       {required double latitude, required double longitude}) async {
@@ -180,14 +222,12 @@ class ComplaintClient {
     try {
       final options = Options(
         headers: {
-          'X-RapidAPI-Key':
-          rapidApiKey,
+          'X-RapidAPI-Key': rapidApiKey,
           'X-RapidAPI-Host': 'geocodeapi.p.rapidapi.com'
         },
       );
 
-      response = await _dio.get(
-         _locationUrl ,
+      response = await _dio.get(_locationUrl,
           queryParameters: {
             'range': '0',
             'longitude': longitude,

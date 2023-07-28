@@ -1,6 +1,6 @@
 class EndPoints{
   EndPoints._();
-  static const String ip_address="172.18.0.1:9000";
+  static const String ip_address="172.16.41.57:9000";
 
   // base url
   static const String getTokeUrl = "http://$ip_address/v1/api/token";
@@ -17,6 +17,7 @@ class EndPoints{
   static const String  notificationUrl="http://$ip_address/v1/api/notification";
   static const String  feedbackUrl="http://$ip_address/v1/api/feedback";
 static const String  eventCategory="http://$ip_address/v1/api/events/find/category";
+static const String  profileUrl="http://$ip_address/v1/api/token/profile";
 
   // receiveTimeout
   static const int receiveTimeout = 15000;

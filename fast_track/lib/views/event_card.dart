@@ -143,8 +143,8 @@ Future<List<EventResponse>>? eventsData;
             ),
           ),
           Positioned(
-            top: MediaQuery.of(context).size.height*0.5,
-            left: MediaQuery.of(context).size.width*0.5,
+            top: 50,
+            left: 50,
             child:Card(
       child: SizedBox(
         width: 250,

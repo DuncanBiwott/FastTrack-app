@@ -1,8 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../services/api/authenticationService/loginService/login_dio_client.dart';
+import '../services/api/user_request_services/complaint_client.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -19,6 +21,17 @@ class _ProfileState extends State<Profile> {
       message: massage,
       duration: const Duration(seconds: 3),
     ).show(context);
+  }
+
+  final ComplaintClient complaintClient = ComplaintClient();
+  late final Response<dynamic> response;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      response = complaintClient.getProfile(context: context) as Response<dynamic>;
+    });
   }
 
   @override
@@ -43,10 +56,11 @@ class _ProfileState extends State<Profile> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Container(
                 height: 280,
-                width: MediaQuery.of(context).size.width*0.7,
+                width: MediaQuery.of(context).size.width * 0.7,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(color: Colors.grey),
@@ -55,20 +69,26 @@ class _ProfileState extends State<Profile> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         FontAwesomeIcons.user,
                         size: 32,
                       ),
-                      trailing: Icon(
+                      trailing: const Icon(
                         FontAwesomeIcons.angleRight,
                       ),
-                      title: Row(
+                      title: ListView(
+                        scrollDirection: Axis.horizontal,
                         children: [
-                          Text("Email"),
+                          Text("Email: ${response.data['email']}"),
                           const Icon(
                             Icons.verified,
                             color: Colors.blue,
-                          )
+                          ),
+                          Text("UserName: ${response.data['username']}"),
+                          Text("FullName: ${response.data['fullName']}"),
+                          Text(
+                              "Account created At: ${response.data['createdAt']}"),
+                          Text("Status: ${response.data['contentStatus']}"),
                         ],
                       ),
                       onTap: () {},
@@ -77,27 +97,39 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            Divider(),
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.grey)),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: ListTile(
-                  leading: Icon(
-                    FontAwesomeIcons.creditCard,
-                    size: 32,
-                  ),
-                  trailing: const Icon(
-                    FontAwesomeIcons.angleRight,
-                  ),
-                  title: Text("Payments & purchases"),
-                  onTap: () {},
-                ),
-              ),
-            ),
+            const Divider(),
+            Card(
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(8.0),
+    side: BorderSide(color: Colors.grey), // Border color
+  ),
+  child: ListTile(
+    leading: Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.blue, // Set a background color for the icon
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: const Icon(
+        FontAwesomeIcons.creditCard,
+        size: 24,
+        color: Colors.white, // Icon color
+      ),
+    ),
+    title: const Text(
+      "Payments & purchases",
+      style: TextStyle(
+        fontWeight: FontWeight.bold, // Bold text
+      ),
+    ),
+    trailing: const Icon(
+      FontAwesomeIcons.angleRight,
+      size: 24,
+    ),
+    onTap: () {},
+  ),
+),
             Divider(),
             const Text(
               "Settings & Preferences",
@@ -113,7 +145,7 @@ class _ProfileState extends State<Profile> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.notifications,
                   ),
                   title: const Text(
@@ -248,10 +280,12 @@ class _ProfileState extends State<Profile> {
                 onPressed: () async {
                   LoginDioClient().logout(context);
                 },
-                
                 child: const Row(
                   children: [
-                    Icon(FontAwesomeIcons.arrowRightToBracket,color: Colors.red,),
+                    Icon(
+                      FontAwesomeIcons.arrowRightToBracket,
+                      color: Colors.red,
+                    ),
                     SizedBox(
                       width: 10,
                     ),

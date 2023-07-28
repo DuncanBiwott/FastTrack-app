@@ -15,33 +15,26 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  int _selectedIndex = 0;
 
-    int _selectedIndex = 0;
-
-  List<Widget> _pages ()=><Widget> [
-    HomeScreen(),
-    FeedsScreen(),
-    const ChatScreen(),
-    FeedsScreen(),
-    FeedbackPage(),
-    const Profile(),
-   
-    
-    
-  ];
+  List<Widget> _pages() => <Widget>[
+        HomeScreen(),
+        FeedsScreen(),
+        const ChatScreen(),
+        FeedsScreen(),
+        FeedbackPage(),
+        const Profile(),
+      ];
 
   void _onItemTapped(int index) {
-    
     setState(() {
       _selectedIndex = index;
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: _pages()[_selectedIndex],
       floatingActionButton: FloatingActionButton(
         backgroundColor: Constants().p_button,
@@ -56,41 +49,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: Container(
-      
         child: BottomNavigationBar(
             selectedItemColor: Colors.black,
             showUnselectedLabels: false,
-            
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.house,size: 16,),
+                icon: Icon(
+                  FontAwesomeIcons.house,
+                  size: 16,
+                ),
                 label: "Home",
               ),
-              
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.rss,size: 16,
+                icon: Icon(
+                  FontAwesomeIcons.rss,
+                  size: 16,
                 ),
                 label: "Feed",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.comments,size: 16,
+                icon: Icon(
+                  FontAwesomeIcons.comments,
+                  size: 16,
                 ),
                 label: "Chatbot",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.clockRotateLeft,size: 16,
+                icon: Icon(
+                  FontAwesomeIcons.clockRotateLeft,
+                  size: 16,
                 ),
                 label: "History",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.comment,size: 16,
+                icon: Icon(
+                  FontAwesomeIcons.comment,
+                  size: 16,
                 ),
                 label: "Feedback",
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user,size: 16,
+                icon: Icon(
+                  FontAwesomeIcons.user,
+                  size: 16,
                 ),
                 label: "Profile",
               ),
@@ -98,6 +101,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
- 
 }

@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<EventResponse>>? eventsData;
   final TextEditingController _searchController = TextEditingController();
 
-    Future<void> _launchURL(String url) async {
+  Future<void> _launchURL(String url) async {
     final Uri uri = Uri(scheme: "https", host: url);
 
     if (!await launchUrl(
@@ -49,12 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
     _pageController.dispose();
     super.dispose();
   }
-  shareFeedBack(String link,String description,String date) {
-    final String text = "Title: $description \n Date: $date \n Check More Info Here: $link";
+
+  shareFeedBack(String link, String description, String date) {
+    final String text =
+        "Title: $description \n Date: $date \n Check More Info Here: $link";
     Share.share(text);
   }
 
-  Widget buildPage(Text message, String image,String date,String? link) {
+  Widget buildPage(Text message, String image, String date, String? link) {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
@@ -79,11 +81,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(child: Text(date)),
-                  IconButton(onPressed: (){
-                     _launchURL(link!);
-
-                  }, icon: const Icon(FontAwesomeIcons.twitter,color: Colors.white,)),
-                ],),
+                  IconButton(
+                      onPressed: () {
+                        _launchURL(link!);
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.twitter,
+                        color: Colors.white,
+                      )),
+                ],
+              ),
             )
           ]),
     );
@@ -124,28 +131,26 @@ class _HomeScreenState extends State<HomeScreen> {
           width: 250,
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  event.title!,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                children: [
+                  Text(
+                    event.title!,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    overlayEntry.remove();
-                  },
-                  icon: const Icon(Icons.close),
-                ),
-                
-              ],
-            ),
+                  IconButton(
+                    onPressed: () {
+                      overlayEntry.remove();
+                    },
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
               ClipRRect(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
@@ -169,16 +174,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    event.description!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  event.description!,
+                  style: const TextStyle(
+                    fontSize: 16,
                   ),
-                )
-              ),
+                ),
+              )),
               SizedBox(
                 height: 10,
               ),
@@ -195,39 +199,44 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                   
                   ],
                 ),
               ),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                 
                   CircleAvatar(
                     backgroundColor: Colors.grey,
                     child: IconButton(
-                          icon: const Icon(Icons.copy,color: Colors.white,),
-                          onPressed: () {
-                           shareFeedBack(event.imageUrl!,event.description!,formattedDate);
-                          },
-                        ),
-                  ),
-                      CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        child: IconButton(
-                          
-                          icon: const Icon(Icons.remove_red_eye,color: Colors.white,),
-                          onPressed: () {
-                            shareFeedBack(event.imageUrl!,event.description!,formattedDate);
-                          },
-                        ),
+                      icon: const Icon(
+                        Icons.copy,
+                        color: Colors.white,
                       ),
-                       CircleAvatar(
+                      onPressed: () {
+                        shareFeedBack(
+                            event.imageUrl!, event.description!, formattedDate);
+                      },
+                    ),
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        shareFeedBack(
+                            event.imageUrl!, event.description!, formattedDate);
+                      },
+                    ),
+                  ),
+                  CircleAvatar(
                     backgroundColor: Colors.grey,
                     child: IconButton(
                       onPressed: () {
-                        shareFeedBack(event.imageUrl!,event.description!,formattedDate);
+                        shareFeedBack(
+                            event.imageUrl!, event.description!, formattedDate);
                       },
                       icon: const Icon(
                         Icons.share,
@@ -245,8 +254,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: 100,
-        left: 50,
+        top: 20,
+        left: 10,
         child: overlayContent,
       ),
     );
@@ -255,648 +264,636 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String? _searchTerm;
-String? _selectedCategory;
+  String? _selectedCategory;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-
-          
           body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage( "https://www.washingtonpost.com/resizer/DXVTVSRMHorZckQOEWqy3KOuQ9E=/arc-anglerfish-washpost-prod-washpost/public/4AUCLPRYD4I6ZFTCHGOPU5PP5Y.jpg",
-                   ),
-            fit: BoxFit.cover,
-            opacity: 0.9
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        hintStyle: TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(
+                        "https://www.washingtonpost.com/resizer/DXVTVSRMHorZckQOEWqy3KOuQ9E=/arc-anglerfish-washpost-prod-washpost/public/4AUCLPRYD4I6ZFTCHGOPU5PP5Y.jpg",
                       ),
-                      onChanged: (value) {
-                setState(() {
-                  _searchTerm = value;
-                  
-                });
-              },
-                    ),
-                  ),
-                  SizedBox(width: 8),
-
-                  DropdownButton<String>(
-            value: _selectedCategory,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedCategory = newValue;
-              });
-            },
-            items: <String>['HEALTH', 'EDUCATION', 'TRANSPORT', 'SECURITY'] 
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value,style: TextStyle(color: Colors.white),),
-              );
-            }).toList()),
-                  const SizedBox(width: 16),
-                  NotificationIcon(),
-                ],
-              ),
-            ),
-          
-            const Padding(
-              padding: EdgeInsets.only(top:8.0,left: 32,right: 32),
-              child: Expanded(
-                child: Text(
-                  'Instant digital access to over 50 government services, all in one place.',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+                      fit: BoxFit.cover,
+                      opacity: 0.9),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-                  SizedBox(
-                          height: 16,
-                        ),
-                   Center(
-                     child: Padding(
-                                     padding: const EdgeInsets.only(left: 16, right: 16),
-                                     child: Container(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width*0.8,
-                      decoration: const BoxDecoration(
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: const Column(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Center(
-                            child: Text("--Frequently used --"),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    Icon(
-                                      FontAwesomeIcons.car,
-                                      size: 32,
-                                      color: Color.fromARGB(255, 198, 123, 11),
-                                    ),
-                                    Text(
-                                      "Transport",
-                                      style: TextStyle(fontSize: 10),
-                                    )
-                                  ],
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                hintText: 'Search...',
+                                hintStyle: TextStyle(color: Colors.white),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.security,
-                                      color: Color.fromARGB(255, 212, 21, 8),
-                                    ),
-                                    Text(
-                                      "Security",
-                                      style: TextStyle(fontSize: 10),
-                                    )
-                                  ],
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.health_and_safety,
-                                      size: 32,
-                                      color: Color.fromARGB(255, 65, 3, 76),
-                                    ),
-                                    Text(
-                                      "Health",
-                                      style: TextStyle(fontSize: 10),
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.cast_for_education,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text(
-                                      "Education",
-                                      style: TextStyle(fontSize: 10),
-                                    )
-                                  ],
-                                ),
-                              ],
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchTerm = value;
+                                });
+                              },
                             ),
-                          )
+                          ),
+                          const SizedBox(width: 16),
+                          NotificationIcon(),
                         ],
                       ),
-                                     ),
-                                   ),
-                   ),
-                  const Text(
-                    'Trending on',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0, left: 32, right: 32),
+                      child: Expanded(
+                        child: Text(
+                          'Instant digital access to over 50 government services, all in one place.',
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Container(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    decoration: const BoxDecoration(
+                        color: Colors.white70,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    child: const Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Text("--Frequently used --"),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.car,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 198, 123, 11),
+                                  ),
+                                  Text(
+                                    "Transport",
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.security,
+                                    color: Color.fromARGB(255, 212, 21, 8),
+                                  ),
+                                  Text(
+                                    "Security",
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.health_and_safety,
+                                    size: 32,
+                                    color: Color.fromARGB(255, 65, 3, 76),
+                                  ),
+                                  Text(
+                                    "Health",
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(
+                                    Icons.cast_for_education,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text(
+                                    "Education",
+                                    style: TextStyle(fontSize: 10),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 250,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            child: Column(
+                ),
+              ),
+              const Text(
+                'Trending on',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 250,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              height: 200.0,
+                              child: PageView(
+                                controller: _pageController,
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    _currentPage = index;
+                                  });
+                                },
+                                children: [
+                                  buildPage(
+                                      Text(
+                                        "Government Announce Free Elecricity",
+                                        style: TextStyle(
+                                          color: Constants().background,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      "https://img.freepik.com/free-vector/abstract-classic-blue-screensaver_23-2148421853.jpg?size=626&ext=jpg",
+                                      DateTime.now().toString(),
+                                      "www.twitter.com/KPLC7News"),
+                                  buildPage(
+                                      Text(
+                                        "Get important announcements On Health ",
+                                        style: TextStyle(
+                                          color: Constants().dot2_text,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      "https://img.freepik.com/free-vector/realistic-neon-lights-background_23-2148907367.jpg?size=626&ext=jpg",
+                                      DateTime.now().toString(),
+                                      "www.twitter.com/UNICEFwater"),
+                                  buildPage(
+                                      Text(
+                                        "Stay connected and informed about our services.",
+                                        style: TextStyle(
+                                          color: Constants().dot3_text,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      "https://img.freepik.com/free-vector/halftone-background-with-circles_23-2148907689.jpg?size=626&ext=jpg",
+                                      DateTime.now().toString(),
+                                      "www.//twitter.com/MOH_Kenya/status/1681979885609205761"),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20),
-                                  height: 200.0,
-                                  child: PageView(
-                                    controller: _pageController,
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        _currentPage = index;
-                                      });
-                                    },
-                                    children: [
-                                      buildPage(
-                                        Text(
-                                          "Government Announce Free Elecricity",
-                                          style: TextStyle(
-                                            color: Constants().background,
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        "https://img.freepik.com/free-vector/abstract-classic-blue-screensaver_23-2148421853.jpg?size=626&ext=jpg",
-                                        DateTime.now().toString(),
-                                        "www.twitter.com/KPLC7News"
-                                      ),
-                                      buildPage(
-                                          Text(
-                                            "Get important announcements On Health ",
-                                            style: TextStyle(
-                                              color: Constants().dot2_text,
-                                              fontSize: 24.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          "https://img.freepik.com/free-vector/realistic-neon-lights-background_23-2148907367.jpg?size=626&ext=jpg",
-                                          DateTime.now().toString(),
-                                        "www.twitter.com/UNICEFwater"
-                                          ),
-                                          
-                                      buildPage(
-                                          Text(
-                                            "Stay connected and informed about our services.",
-                                            style: TextStyle(
-                                              color: Constants().dot3_text,
-                                              fontSize: 24.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          "https://img.freepik.com/free-vector/halftone-background-with-circles_23-2148907689.jpg?size=626&ext=jpg",
-                                          DateTime.now().toString(),
-                                        "www.//twitter.com/MOH_Kenya/status/1681979885609205761"
-                                          ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 10.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    buildDot(0),
-                                    buildDot(1),
-                                    buildDot(2),
-                                  ],
-                                ),
+                                buildDot(0),
+                                buildDot(1),
+                                buildDot(2),
                               ],
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  const Text(
-                    'Upcoming Events',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  FutureBuilder<List<EventResponse>>(
-                    future: IncidentClient()
-                        .getAllEvents(perpage: 10, page: 1, context: context),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else {
-                        List<EventResponse> data = snapshot.data!;
-                        return SizedBox(
-                          height: 280,
-                          width: double.infinity,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: data.length,
-                            itemBuilder: (context, index) {
-                              DateTime parsedDate =
-                                  DateTime.parse(data[index].eventDateTime!);
-                              String formattedDate =
-                                  DateFormat('EEEE, d MMMM hh:mm a y')
-                                      .format(parsedDate);
-                              return Card(
-                                elevation: 4,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  width: 400,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                        ),
-                                        child: Image.network(
-                                          data[index].imageUrl!,
-                                          fit: BoxFit.cover,
-                                          height: 150,
-                                          width: double.infinity,
-                                        ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'Upcoming Events',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              FutureBuilder<List<EventResponse>>(
+                future: IncidentClient()
+                    .getAllEvents(perpage: 10, page: 1, context: context),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    List<EventResponse> data = snapshot.data!;
+                    return SizedBox(
+                      height: 280,
+                      width: double.infinity,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          DateTime parsedDate =
+                              DateTime.parse(data[index].eventDateTime!);
+                          String formattedDate =
+                              DateFormat('EEEE, d MMMM hh:mm a y')
+                                  .format(parsedDate);
+                          return Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              width: 200,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                    ),
+                                    child: Image.network(
+                                      data[index].imageUrl!,
+                                      fit: BoxFit.cover,
+                                      height: 140,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      data[index].title!,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          data[index].title!,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            formattedDate,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                formattedDate,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.blue),
-                                              ),
-                                              onPressed: () {
-                                                _showOverlay(data[index]);
-                                              },
-                                              child: const Text(
-                                                'View Details',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ],
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.blue),
+                                          ),
+                                          onPressed: () {
+                                            _showOverlay(data[index]);
+                                          },
+                                          child: const Text(
+                                            'View Details',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("All Services",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold)),
+                    Text("More",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue)),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MedicalCareDetails()),
                         );
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 8.0),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("All Services",
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold)),
-    
-                                Text("More",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue)),
-                      
-                      ],
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 130,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.health_and_safety_outlined,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text("Medical Care",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("Health Improvement")
+                                ]),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                           Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MedicalCareDetails()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 130,
-                            width: 200,
-                            decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.health_and_safety_outlined,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text("Medical Care",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold)),
-                                    Text("Health Improvement")
-                                  ]),
-                            ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EducationDetails()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 130,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.cast_for_education,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text(
+                                    "Education",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text("Concerning school")
+                                ]),
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>EducationDetails()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 130,
-                            width: 200,
-                            decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.cast_for_education,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text(
-                                      "Education",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text("Concerning school")
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SecurityDetails()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                             height: 130,
-                            width: 200,
-                            decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.security,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text("Security",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold)),
-                                    Text("Police Safety")
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => TransPort()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                             height: 130,
-                            width: 200,
-                            decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.car_repair_outlined,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text(
-                                      "Transport",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text("Traffic Bus Car Complaint")
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => EmergencyDetails()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 130,
-                            width: 200,
-                            decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.emergency,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text("Emergency",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold)),
-                                    Text("Fire Accident Denger")
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>ElectricityDetails()),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                             height: 130,
-                            width: 200,
-                            decoration: const BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.light_outlined,
-                                      size: 32,
-                                      color: Colors.blue,
-                                    ),
-                                    Text("Electricity",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold)),
-                                    Text("Power problem")
-                                  ]),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SecurityDetails()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 130,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.security,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text("Security",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("Police Safety")
+                                ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TransPort()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 130,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.car_repair_outlined,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text(
+                                    "Transport",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text("Traffic Bus Car Complaint")
+                                ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EmergencyDetails()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 130,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.emergency,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text("Emergency",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("Fire Accident Denger")
+                                ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ElectricityDetails()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 130,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              color: Colors.white70,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.light_outlined,
+                                    size: 32,
+                                    color: Colors.blue,
+                                  ),
+                                  Text("Electricity",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("Power problem")
+                                ]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
+        ),
+      )),
     );
-    
   }
 }
