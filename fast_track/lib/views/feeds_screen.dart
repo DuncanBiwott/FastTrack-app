@@ -3,9 +3,13 @@ import 'package:fast_track/views/complaint_card.dart';
 import 'package:fast_track/views/incidents_list.dart';
 import 'package:fast_track/views/notification_icon.dart';
 import 'package:fast_track/views/post_pages/main_post_screen.dart';
+import 'package:fast_track/views/search.dart';
+import 'package:fast_track/views/user_reports.dart';
 import 'package:flutter/material.dart';
 
 class FeedsScreen extends StatefulWidget {
+  const FeedsScreen({super.key});
+
   @override
   State<FeedsScreen> createState() => _FeedsScreenState();
 }
@@ -42,19 +46,29 @@ class _FeedsScreenState extends State<FeedsScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      style: const TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        hintStyle: TextStyle(color: Colors.black),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Constants().p_button),
-                          borderRadius: BorderRadius.circular(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SearchPage(),
+                                  ),
+                                );
+                              },
+                      child: TextField(
+                        controller: _searchController,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          hintStyle: const TextStyle(color: Colors.black),
+                          border: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.black),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Constants().p_button),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                         ),
                       ),
                     ),
@@ -83,13 +97,12 @@ class _FeedsScreenState extends State<FeedsScreen>
         children: const [
           ComplaintCard(),
           IncidentsList(),
-          ComplaintCard(),
+          UserReports()
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Handle floating action button click
-          // Navigate to the create feed page
+          
           Navigator.push(
             context,
             MaterialPageRoute(

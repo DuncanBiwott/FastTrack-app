@@ -120,6 +120,8 @@ class ComplaintClient {
     }
   }
 
+
+//Get All Complaints 
   Future<List<ComplaintResponse>> getComplaints({
     required int perPage,
     required int page,
@@ -144,6 +146,60 @@ class ComplaintClient {
 
       Response response = await _dio.get(
         _baseUrl,
+        queryParameters: {'per_page': perPage, 'page': page, 'search': search},
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data["data"];
+        List<ComplaintResponse> complaints = responseData
+            .map((complaint) => ComplaintResponse.fromJson(complaint))
+            .toList();
+        return complaints;
+      } else if (response.statusCode == 401) {
+        await prefs.remove('fast_token');
+
+        Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+        );
+
+        throw Exception('Unauthorized');
+      } else {
+        throw Exception('Failed to get Complaints');
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw Exception(errorMessage);
+    }
+  }
+
+//Get all Complaints Reports by User
+
+Future<List<ComplaintResponse>> getUserReports({
+    required int perPage,
+    required int page,
+    String? search,
+    required BuildContext? context,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Token not found');
+      }
+
+      final options = Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      Response response = await _dio.get(
+        EndPoints.userReportsUrl,
         queryParameters: {'per_page': perPage, 'page': page},
         options: options,
       );
@@ -172,7 +228,11 @@ class ComplaintClient {
     }
   }
 
-  Future<Response<dynamic>> getProfile({
+
+
+
+//Get user profile details
+  Future<Response> getProfile({
     required BuildContext? context,
   }) async {
     try {
@@ -216,6 +276,10 @@ class ComplaintClient {
     }
   }
 
+
+
+
+//Get User Location from latitude and longitude using RapidApi
   Future<String> getLocation(
       {required double latitude, required double longitude}) async {
     Response response;

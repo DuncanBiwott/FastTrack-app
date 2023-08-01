@@ -1,37 +1,31 @@
-import 'package:fast_track/constants/constants.dart';
-import 'package:fast_track/models/complaint_response.dart';
 import 'package:fast_track/services/api/user_request_services/complaint_client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ComplaintCard extends StatefulWidget {
+import '../constants/constants.dart';
+import '../models/complaint_response.dart';
 
-
-  const ComplaintCard({
-    Key? key,
-  }) : super(key: key);
+class UserReports extends StatefulWidget {
+  const UserReports({super.key});
 
   @override
-  State<ComplaintCard> createState() => _ComplaintCardState();
-
+  State<UserReports> createState() => _UserReportsState();
 }
 
-class _ComplaintCardState extends State<ComplaintCard> {
+class _UserReportsState extends State<UserReports> {
 
-  
-
-   Future<List<ComplaintResponse>>? complaintsData;
+  Future<List<ComplaintResponse>>? complaintsData;
 
   @override
   void initState() {
-    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20, context: context);
+    complaintsData=ComplaintClient().getUserReports(page: 1, perPage: 20, context: context);
     super.initState();
   }
 
 
 onRefreshPage(){
   setState(() {
-    complaintsData=ComplaintClient().getComplaints(page: 1, perPage: 20, context: context);
+    complaintsData=ComplaintClient().getUserReports(page: 1, perPage: 20, context: context);
   });
 }
  
@@ -127,11 +121,10 @@ onRefreshPage(){
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<ComplaintResponse>>(
-      future:ComplaintClient().getComplaints( page: 1, perPage: 20, context: context),
+      future:ComplaintClient().getUserReports( page: 1, perPage: 20, context: context),
       builder: (context, snapshot) { 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -257,9 +250,5 @@ onRefreshPage(){
     }
       },
     );
-    
   }
 }
-
-
-

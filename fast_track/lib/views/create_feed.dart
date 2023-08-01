@@ -47,8 +47,8 @@ class _CreateFeedScreenState extends State<CreateFeedScreen> {
                 backgroundColor:Theme.of(context).primaryColor, 
               ),
               onPressed: () {
-                String title = _titleController.text;
-                String description = _descriptionController.text;
+                // String title = _titleController.text;
+                // String description = _descriptionController.text;
 
                 showDialog(
                   context: context,

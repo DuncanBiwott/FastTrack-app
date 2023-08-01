@@ -24,14 +24,17 @@ class _ProfileState extends State<Profile> {
   }
 
   final ComplaintClient complaintClient = ComplaintClient();
-  late final Response<dynamic> response;
+   dynamic response;
 
   @override
   void initState() {
-    super.initState();
     setState(() {
-      response = complaintClient.getProfile(context: context) as Response<dynamic>;
+      response =  complaintClient.getProfile(context: context);
     });
+      
+
+      super.initState();
+    
   }
 
   @override

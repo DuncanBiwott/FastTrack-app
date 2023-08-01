@@ -1,6 +1,5 @@
 import 'package:fast_track/models/notification_response.dart';
 import 'package:fast_track/services/api/user_request_services/incident_client.dart';
-import 'package:fast_track/views/notification_icon.dart';
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -13,7 +12,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   bool showFullMessage = false;
   String _truncateMessage(String message) {
-    final int maxLength = 50; // Define your desired max length here
+    const int maxLength = 50;
     if (message.length > maxLength) {
       return message.substring(0, maxLength) + '... Read More';
     }
@@ -24,13 +23,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
       ),
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor:
-              0.6, // Adjust this value to control the height of the bottom sheet
+          heightFactor: 0.6,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -38,18 +36,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Add a close button at the top right corner
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                   ),
-                  SizedBox(height: 16),
-                  Text(
+                  const SizedBox(height: 16),
+                  const Text(
                     "Full Message",
                     style: TextStyle(
                       fontSize: 24.0,
@@ -57,21 +54,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Container(
                     height: 2,
                     width: 50,
                     color: Colors.grey[300],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     message,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18.0,
                       color: Colors.black,
                     ),
                   ),
-                  // You can add more content to the bottom sheet as needed
                 ],
               ),
             ),
@@ -94,19 +90,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            // Error handling if API call fails
             return const Center(
               child: Text('Failed to load notifications'),
             );
           } else if (snapshot.hasData) {
-            // Use the snapshot data to display the list of notifications
             final notifications = snapshot.data!;
             return ListView.builder(
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 return ListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  leading: const Icon(
+                    Icons.notifications,
+                    color: Colors.blue,
+                  ),
                   title: Container(
-                    height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
@@ -124,12 +123,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       child: GestureDetector(
                         onTap: () {
                           _showFullMessageBottomSheet(
-                              context, notifications[index].message);
+                            context,
+                            notifications[index].message,
+                          );
                         },
-                        child: Text(
+                        child: SelectableText(
                           showFullMessage
                               ? notifications[index].message
                               : _truncateMessage(notifications[index].message),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black, 
+                          ),
                         ),
                       ),
                     ),

@@ -174,175 +174,177 @@ class _MainPostScreenState extends State<MainPostScreen>
               children: [
                 Form(
                   key: _formKeyComplaint,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Category:",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                elevation: 0,
-                                value: category,
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                items: categories.map((String item) {
-                                  return DropdownMenuItem(
-                                    value: item,
-                                    child: Text(item),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    category = newValue!;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextFormField(
-                        controller: _locationController,
-                        cursorColor: Colors.blue,
-                        decoration: InputDecoration(
-                          hintText: "Enter your location here near $_location",
-                          label: Row(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const Icon(Icons.location_on),
-                              RichText(
-                                text: TextSpan(
-                                  style: const TextStyle(
-                                      fontSize: 16, color: Colors.black),
-                                  children: [
-                                    const TextSpan(text: 'Your Location near '),
-                                    TextSpan(
-                                      text: '($_location)',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,fontSize: 20),
-                                    ),
-                                  ],
+                              const Text(
+                                "Category:",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  elevation: 0,
+                                  value: category,
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: categories.map((String item) {
+                                    return DropdownMenuItem(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      category = newValue!;
+                                    });
+                                  },
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter your specific location here!'
-                            : null,
-                      ),
-                      TextFormField(
-                        autocorrect: true,
-                        enableSuggestions: true,
-                        controller: _complaintTitleController,
-                        cursorColor: Colors.blue,
-                        decoration: const InputDecoration(
-                          hintText: "Title Complaint?",
-                        ),
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter a title for your complaint'
-                            : null,
-                      ),
-                      const SizedBox(height: 16.0),
-                      TextFormField(
-                        controller: _complaintController,
-                        maxLines: 5,
-                        cursorColor: Colors.blue,
-                        decoration: const InputDecoration(
-                          hintText: "What's the Complaint?",
-                        ),
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter your complaint'
-                            : null,
-                      ),
-                      _isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : const SizedBox(height: 8.0),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-
-                      Center(
-                        child: Container(
-                          height: 50.0,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: Expanded(
-                            child: ElevatedButton(
-                                onPressed: () async {
-                                  if (_formKeyComplaint.currentState!
-
-                                      .validate()) {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    
-
-                                    try {
-                                      await _complaintClient.addComplaint(
-                                          context: context,
-                                          complaint: Complaint(
-                                            title: _complaintTitleController!
-                                                .text
-                                                .trim(),
-                                            category: category,
-                                            description: _complaintController!
-                                                .text
-                                                .trim(),
-                                            location: "${_locationController!.text.trim()}($_location) ",
-                                            status: 'OPEN',
-                                            submissionDateTime: DateTime.now()
-                                                .toIso8601String(),
-                                          ));
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
-
-                                      _showSuccessMessage(
-                                          'Complaint Posted Successfully',
-                                          Colors.green);
-                                    } catch (e) {
-                                      setState(() {
-                                        _isLoading = false;
-                                      });
-                                      _showSuccessMessage(
-                                          'Error Posting Complaint',
-                                          Colors.red);
-                                    }
-                                  }
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                    Constants().p_button,
-                                  ),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
+                        TextFormField(
+                          controller: _locationController,
+                          cursorColor: Colors.blue,
+                          decoration: InputDecoration(
+                            hintText: "Enter your location here near $_location",
+                            label: Row(
+                              children: [
+                                const Icon(Icons.location_on),
+                                RichText(
+                                  text: TextSpan(
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.black),
+                                    children: [
+                                      const TextSpan(text: 'Your Location near '),
+                                      TextSpan(
+                                        text: '($_location)',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,fontSize: 20),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Text(
-                                  'SUBMIT',
-                                  style: TextStyle(
-                                    color: Constants().p_button_text,
-                                    fontSize: 16.0,
-                                  ),
-                                )),
+                              ],
+                            ),
                           ),
+                          validator: (value) => value!.isEmpty
+                              ? 'Please enter your specific location here!'
+                              : null,
                         ),
-                      )
-                    ],
+                        TextFormField(
+                          autocorrect: true,
+                          enableSuggestions: true,
+                          controller: _complaintTitleController,
+                          cursorColor: Colors.blue,
+                          decoration: const InputDecoration(
+                            hintText: "Title Complaint?",
+                          ),
+                          validator: (value) => value!.isEmpty
+                              ? 'Please enter a title for your complaint'
+                              : null,
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _complaintController,
+                          maxLines: 5,
+                          cursorColor: Colors.blue,
+                          decoration: const InputDecoration(
+                            hintText: "What's the Complaint?",
+                          ),
+                          validator: (value) => value!.isEmpty
+                              ? 'Please enter your complaint'
+                              : null,
+                        ),
+                        _isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : const SizedBox(height: 8.0),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                  
+                        Center(
+                          child: Container(
+                            height: 50.0,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (_formKeyComplaint.currentState!
+                  
+                                        .validate()) {
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+                                      
+                  
+                                      try {
+                                        await _complaintClient.addComplaint(
+                                            context: context,
+                                            complaint: Complaint(
+                                              title: _complaintTitleController!
+                                                  .text
+                                                  .trim(),
+                                              category: category,
+                                              description: _complaintController!
+                                                  .text
+                                                  .trim(),
+                                              location: "${_locationController!.text.trim()}($_location) ",
+                                              status: 'OPEN',
+                                              submissionDateTime: DateTime.now()
+                                                  .toIso8601String(),
+                                            ));
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                  
+                                        _showSuccessMessage(
+                                            'Complaint Posted Successfully',
+                                            Colors.green);
+                                      } catch (e) {
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                        _showSuccessMessage(
+                                            'Error Posting Complaint',
+                                            Colors.red);
+                                      }
+                                    }
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      Constants().p_button,
+                                    ),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'SUBMIT',
+                                    style: TextStyle(
+                                      color: Constants().p_button_text,
+                                      fontSize: 16.0,
+                                    ),
+                                  )),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Form(

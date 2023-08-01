@@ -5,6 +5,7 @@ import 'package:fast_track/views/electricity_page.dart';
 import 'package:fast_track/views/emergency.dart';
 import 'package:fast_track/views/medical_care.dart';
 import 'package:fast_track/views/notification_icon.dart';
+import 'package:fast_track/views/search.dart';
 import 'package:fast_track/views/security_details.dart';
 import 'package:fast_track/views/transport.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../services/api/user_request_services/incident_client.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -111,98 +114,99 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showOverlay(EventResponse event) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry overlayEntry;
-    DateTime parsedDate = DateTime.parse(event.eventDateTime!);
-    String formattedDate =
-        DateFormat('EEEE, d MMMM hh:mm a y').format(parsedDate);
+void _showOverlay(EventResponse event) {
+  final overlay = Overlay.of(context);
+  late OverlayEntry overlayEntry;
+  DateTime parsedDate = DateTime.parse(event.eventDateTime!);
+  String formattedDate =
+      DateFormat('EEEE, d MMMM hh:mm a y').format(parsedDate);
 
-    Widget overlayContent = Container(
-      alignment: Alignment.center,
-      height: 500,
-      width: 500,
+  Widget overlayContent = Center(
+    child: Container(
+      width: 280,
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Container(
-          width: 250,
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
                     event.title!,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      overlayEntry.remove();
-                    },
-                    icon: const Icon(Icons.close),
+                ),
+                IconButton(
+                  onPressed: () {
+                    overlayEntry.remove();
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: Image.network(
+                event.imageUrl!,
+                fit: BoxFit.cover,
+                height: 150,
+                width: double.infinity,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                event.title!,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                event.description!,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      formattedDate,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ],
               ),
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
-                child: Image.network(
-                  event.imageUrl!,
-                  fit: BoxFit.cover,
-                  height: 150,
-                  width: double.infinity,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  event.title!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  event.description!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              )),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        formattedDate,
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   CircleAvatar(
@@ -245,26 +249,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
-    );
+    ),
+  );
 
-    overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: 20,
-        left: 10,
-        child: overlayContent,
-      ),
-    );
+  overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      top: MediaQuery.of(context).size.height / 2 - 250,
+      left: MediaQuery.of(context).size.width / 2 - 125,
+      child: overlayContent,
+    ),
+  );
 
-    overlay.insert(overlayEntry);
-  }
+  overlay.insert(overlayEntry);
+}
 
-  String? _searchTerm;
-  String? _selectedCategory;
+
 
   @override
   Widget build(BuildContext context) {
@@ -296,26 +300,32 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                hintText: 'Search...',
-                                hintStyle: TextStyle(color: Colors.white),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _searchTerm = value;
-                                });
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SearchPage(),
+                                  ),
+                                );
                               },
+                              child: TextField(
+                                controller: _searchController,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                  hintText: 'Search...',
+                                  hintStyle: const TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                                
+                              ),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -335,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Center(
@@ -657,7 +667,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Icon(
                                     Icons.health_and_safety_outlined,
@@ -697,7 +708,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Icon(
                                     Icons.cast_for_education,
@@ -744,7 +756,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Icon(
                                     Icons.security,
@@ -783,7 +796,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Icon(
                                     Icons.car_repair_outlined,
@@ -830,7 +844,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Icon(
                                     Icons.emergency,
@@ -870,7 +885,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Icon(
                                     Icons.light_outlined,
