@@ -63,7 +63,7 @@ onRefreshPage(){
                 ),
                 const SizedBox(height: 16.0),
                 Text(
-                  dataItem.user["username"],
+                  dataItem.user["fullName"],
                   style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,

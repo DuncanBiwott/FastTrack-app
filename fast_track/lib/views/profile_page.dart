@@ -24,16 +24,12 @@ class _ProfileState extends State<Profile> {
   }
 
   final ComplaintClient complaintClient = ComplaintClient();
-   dynamic response;
+  Future<Response>? _profileFuture;
 
   @override
   void initState() {
-    setState(() {
-      response =  complaintClient.getProfile(context: context);
-    });
-      
-
-      super.initState();
+    _profileFuture  =complaintClient.getProfile(context: context);
+    super.initState();
     
   }
 
@@ -58,72 +54,91 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Container(
-                height: 280,
-                width: MediaQuery.of(context).size.width * 0.7,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.grey),
+    FutureBuilder<Response>(
+  future: _profileFuture,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (snapshot.hasError) {
+      return Center(
+        child: Text('Error: ${snapshot.error}'),
+      );
+    } else {
+      Map<String, dynamic>? userData = snapshot.data?.data;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 8.0,
+        ),
+        child: Container(
+          height: 280,
+          width: MediaQuery.of(context).size.width * 0.7,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(color: Colors.grey),
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                leading: const Icon(
+                  FontAwesomeIcons.user,
+                  size: 32,
                 ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: const Icon(
-                        FontAwesomeIcons.user,
-                        size: 32,
-                      ),
-                      trailing: const Icon(
-                        FontAwesomeIcons.angleRight,
-                      ),
-                      title: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Text("Email: ${response.data['email']}"),
-                          const Icon(
-                            Icons.verified,
-                            color: Colors.blue,
-                          ),
-                          Text("UserName: ${response.data['username']}"),
-                          Text("FullName: ${response.data['fullName']}"),
-                          Text(
-                              "Account created At: ${response.data['createdAt']}"),
-                          Text("Status: ${response.data['contentStatus']}"),
-                        ],
-                      ),
-                      onTap: () {},
+                trailing: const Icon(
+                  FontAwesomeIcons.angleRight,
+                ),
+                title: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Text("Email: ${userData?['email'] ?? 'N/A'}"),
+                    const Icon(
+                      Icons.verified,
+                      color: Colors.blue,
                     ),
-                  ),
+                    Text("UserName: ${userData?['username'] ?? 'N/A'}"),
+                    Text("FullName: ${userData?['fullName'] ?? 'N/A'}"),
+                    Text(
+                      "Account created At: ${userData?['createdAt'] ?? 'N/A'}"),
+                    Text("Status: ${userData?['contentStatus'] ?? 'N/A'}"),
+                  ],
                 ),
+                onTap: () {},
               ),
             ),
+          ),
+        ),
+      );
+    }
+  },
+),
             const Divider(),
             Card(
   shape: RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(8.0),
-    side: BorderSide(color: Colors.grey), // Border color
+    side: BorderSide(color: Colors.grey), 
   ),
   child: ListTile(
     leading: Container(
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.blue, // Set a background color for the icon
+        color: Colors.blue, 
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: const Icon(
         FontAwesomeIcons.creditCard,
         size: 24,
-        color: Colors.white, // Icon color
+        color: Colors.white, 
       ),
     ),
     title: const Text(
       "Payments & purchases",
       style: TextStyle(
-        fontWeight: FontWeight.bold, // Bold text
+        fontWeight: FontWeight.bold,
       ),
     ),
     trailing: const Icon(
@@ -154,7 +169,7 @@ class _ProfileState extends State<Profile> {
                   title: const Text(
                     'Notification',
                   ),
-                  trailing: Icon(FontAwesomeIcons.angleRight),
+                  trailing: const Icon(FontAwesomeIcons.angleRight),
                   onTap: () {},
                 ),
               ),

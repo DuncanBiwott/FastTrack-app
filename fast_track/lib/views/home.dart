@@ -5,6 +5,7 @@ import 'package:fast_track/views/electricity_page.dart';
 import 'package:fast_track/views/emergency.dart';
 import 'package:fast_track/views/medical_care.dart';
 import 'package:fast_track/views/notification_icon.dart';
+import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:fast_track/views/search.dart';
 import 'package:fast_track/views/security_details.dart';
 import 'package:fast_track/views/transport.dart';
@@ -634,11 +635,6 @@ void _showOverlay(EventResponse event) {
                     Text("All Services",
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold)),
-                    Text("More",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue)),
                   ],
                 ),
               ),
@@ -909,7 +905,20 @@ void _showOverlay(EventResponse event) {
             ],
           ),
         ),
-      )),
+      ),
+            floatingActionButton: FloatingActionButton(
+        backgroundColor: Constants().p_button,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainPostScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+      ),
     );
   }
 }

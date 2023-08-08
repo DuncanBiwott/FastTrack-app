@@ -38,8 +38,6 @@ class _FeedsScreenState extends State<FeedsScreen>
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Constants().p_button
-        ,
         title:           Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(

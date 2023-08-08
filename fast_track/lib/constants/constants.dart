@@ -14,4 +14,7 @@ class Constants{
   Color  dot3=const Color(0xFF0b080d);
   Color  dot2_text=const Color(0xFF020e09);
   Color  dot3_text=const Color(0xFFe9e3ed);
+  Color  green=const Color(0xFF126d4c);
+  Color  welcomeBg=const Color(0xFFf6fae0);
+  Color  welcomeText=const Color(0xFF1f2306);
 }

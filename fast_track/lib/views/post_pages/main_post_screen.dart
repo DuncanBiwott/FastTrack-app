@@ -134,7 +134,7 @@ class _MainPostScreenState extends State<MainPostScreen>
     }).catchError((e) {
       return e;
     });
-    return _location;
+    return _location??"Loading ...";
   }
 
   @override

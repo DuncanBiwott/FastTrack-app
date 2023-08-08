@@ -1,6 +1,6 @@
 class EndPoints{
   EndPoints._();
-  static const String ip_address="172.16.41.57:9000";
+  static const String ip_address="192.168.43.45:9000";
 
   // base url
   static const String getTokeUrl = "http://$ip_address/v1/api/token";

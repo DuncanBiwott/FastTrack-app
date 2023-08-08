@@ -46,7 +46,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Scaffold(
+          backgroundColor: Constants().welcomeBg,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -172,7 +174,7 @@ class _LoginState extends State<Login> {
                                   });
 
                                   _showSuccessMessage(
-                                          "Login Successfull", Colors.green)
+                                          "Login Successfull", Constants().green)
                                       .then((value) {
                                     // Navigate to the home screen after the flushbar is dismissed
                                     Navigator.pushReplacement(
@@ -182,8 +184,6 @@ class _LoginState extends State<Login> {
                                       ),
                                     );
                                   });
-                                  //_showSuccessMessage("Success",
-                                  //  "Login Successfully", Colors.green);
                                 } catch (e) {
                                   _showSuccessMessage(
                                       "Could Not Login", Colors.red);

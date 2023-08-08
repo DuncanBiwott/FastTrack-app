@@ -1,8 +1,8 @@
-import 'package:fast_track/constants/constants.dart';
+
 import 'package:fast_track/views/chat_screen.dart';
 import 'package:fast_track/views/home.dart';
-import 'package:fast_track/views/post_pages/main_post_screen.dart';
 import 'package:fast_track/views/profile_page.dart';
+import 'package:fast_track/views/search.dart';
 import 'package:fast_track/views/send_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,10 +18,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
   List<Widget> _pages() => <Widget>[
-        HomeScreen(),
-        FeedsScreen(),
+        const HomeScreen(),
+        const FeedsScreen(),
         const ChatScreen(),
-        FeedsScreen(),
+        const SearchPage(),
         FeedbackPage(),
         const Profile(),
       ];
@@ -36,18 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages()[_selectedIndex],
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Constants().p_button,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainPostScreen(),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+
       bottomNavigationBar: Container(
         child: BottomNavigationBar(
             selectedItemColor: Colors.black,

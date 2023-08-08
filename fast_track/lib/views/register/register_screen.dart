@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:fast_track/constants/constants.dart';
 import 'package:fast_track/views/login/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../models/register_request.dart';
 import '../../services/api/authenticationService/registerService/register_client.dart';
@@ -50,6 +51,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Constants().welcomeBg,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 16.0),
@@ -63,11 +65,11 @@ class _SignUpState extends State<SignUp> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text(
-                          "Register",
-                          style: TextStyle(color: Constants().headline, fontSize: 50),
-                        )),
+                         Icon(
+                          FontAwesomeIcons.circleChevronUp,
+                          size: 60,
+                          color: Constants().tartiary,
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -255,7 +257,7 @@ class _SignUpState extends State<SignUp> {
                                       userDetails: userDetails);
                                   _showSuccessMessage(
                                           "Account Created Successfully",
-                                          Colors.green)
+                                          Constants().green)
                                       .then((value) {
                                     // Navigate to the home screen after the flushbar is dismissed
                                     Navigator.push(
@@ -298,7 +300,7 @@ class _SignUpState extends State<SignUp> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "SUBMIT",
+                                          "REGISTER",
                                           style: TextStyle(
                                               color: Constants().p_button_text, letterSpacing: 0.5),
                                         ),
