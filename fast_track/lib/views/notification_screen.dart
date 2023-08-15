@@ -88,7 +88,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             .getAllNotifications(perpage: 10, page: 1, context: context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return Center(child: const CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return const Center(
               child: Text('Failed to load notifications'),

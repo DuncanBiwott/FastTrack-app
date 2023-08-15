@@ -2,7 +2,6 @@
 import 'package:fast_track/views/chat_screen.dart';
 import 'package:fast_track/views/home.dart';
 import 'package:fast_track/views/profile_page.dart';
-import 'package:fast_track/views/search.dart';
 import 'package:fast_track/views/send_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,7 +20,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const HomeScreen(),
         const FeedsScreen(),
         const ChatScreen(),
-        const SearchPage(),
         FeedbackPage(),
         const Profile(),
       ];
@@ -65,13 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 label: "Chatbot",
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesomeIcons.clockRotateLeft,
-                  size: 16,
-                ),
-                label: "History",
-              ),
+              
               BottomNavigationBarItem(
                 icon: Icon(
                   FontAwesomeIcons.comment,

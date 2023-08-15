@@ -28,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   Future<List<EventResponse>>? eventsData;
-  final TextEditingController _searchController = TextEditingController();
 
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri(scheme: "https", host: url);
@@ -66,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         image: DecorationImage(
-          image: NetworkImage(image),
+          image: AssetImage(image),
           fit: BoxFit.cover,
         ),
       ),
@@ -275,6 +274,25 @@ void _showOverlay(EventResponse event) {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.search),
+          ),
+          NotificationIcon(),
+
+
+        ]),
+        
           body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 8.0),
@@ -283,58 +301,20 @@ void _showOverlay(EventResponse event) {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 200,
+                height: 150,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: NetworkImage(
-                        "https://www.washingtonpost.com/resizer/DXVTVSRMHorZckQOEWqy3KOuQ9E=/arc-anglerfish-washpost-prod-washpost/public/4AUCLPRYD4I6ZFTCHGOPU5PP5Y.jpg",
+                      image: AssetImage(
+                        "assets/images/background.jpg",
                       ),
                       fit: BoxFit.cover,
                       opacity: 0.9),
                 ),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SearchPage(),
-                                  ),
-                                );
-                              },
-                              child: TextField(
-                                controller: _searchController,
-                                style: const TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  hintText: 'Search...',
-                                  hintStyle: const TextStyle(color: Colors.white),
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                                
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          NotificationIcon(),
-                        ],
-                      ),
-                    ),
-                    const Padding(
                       padding: EdgeInsets.only(top: 8.0, left: 32, right: 32),
                       child: Expanded(
                         child: Text(
@@ -470,7 +450,7 @@ void _showOverlay(EventResponse event) {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      "https://img.freepik.com/free-vector/abstract-classic-blue-screensaver_23-2148421853.jpg?size=626&ext=jpg",
+                                      "assets/images/home.png",
                                       DateTime.now().toString(),
                                       "www.twitter.com/KPLC7News"),
                                   buildPage(
@@ -482,7 +462,7 @@ void _showOverlay(EventResponse event) {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      "https://img.freepik.com/free-vector/realistic-neon-lights-background_23-2148907367.jpg?size=626&ext=jpg",
+                                      "assets/images/home.png",
                                       DateTime.now().toString(),
                                       "www.twitter.com/UNICEFwater"),
                                   buildPage(
@@ -494,9 +474,9 @@ void _showOverlay(EventResponse event) {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      "https://img.freepik.com/free-vector/halftone-background-with-circles_23-2148907689.jpg?size=626&ext=jpg",
+                                      "assets/images/home.png",
                                       DateTime.now().toString(),
-                                      "www.//twitter.com/MOH_Kenya/status/1681979885609205761"),
+                                      "www.twitter.com/MOH_Kenya/status/1681979885609205761"),
                                 ],
                               ),
                             ),

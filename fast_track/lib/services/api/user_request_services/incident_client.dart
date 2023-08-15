@@ -18,6 +18,7 @@ class IncidentClient {
   final String _baseUrl = EndPoints.incidentUrl;
   final String _eventUrl = EndPoints.eventUrl;
   final String _notificationUrl = EndPoints.notificationUrl;
+  final String _recommendationUrl= EndPoints.recommendationUrl;
 
   final Dio _dio = Dio(
     BaseOptions(
@@ -284,6 +285,97 @@ class IncidentClient {
           responseData is Map<String, dynamic> &&
           responseData['error'] == false &&
           responseData['message'] == "Incident created successfully") {
+        return response;
+      }else if (response.statusCode == 401) {
+    
+      await prefs.remove('fast_token');
+
+    Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(builder: (BuildContext context) => const Login()),
+      );
+
+      throw Exception('Unauthorized');
+    } else {
+        throw Exception('Failed to submit Incident');
+      }
+    } catch (error) {
+      print('Error: $error');
+      rethrow;
+    }
+  }
+
+
+    Future<Response?> makeRecommendation(
+      String title,
+      String description,
+      DateTime submissionDateTime,
+      String location,
+      String category,
+      List<File> images,
+      BuildContext? context
+      ) async {
+    Response response;
+    try {
+      // Retrieve token from SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Token not found');
+      }
+
+      _dio.options.headers['Authorization'] = 'Bearer $token';
+      _dio.options.headers['Accept'] = 'application/json';
+
+      var recommendationRequest = {
+        "title": title,
+        "description": description,
+        "submissionDateTime": submissionDateTime.toIso8601String(),
+        "location": location,
+        "category": category
+      };
+
+      FormData formData;
+
+      if (images.isEmpty) {
+        formData = FormData.fromMap({
+          "recommendationRequest": MultipartFile.fromString(
+            jsonEncode(recommendationRequest),
+            contentType: MediaType.parse("application/json"),
+          ),
+        });
+      } else if (images.length == 1) {
+        formData = FormData.fromMap({
+          "recommendationRequest": MultipartFile.fromString(
+            jsonEncode(recommendationRequest),
+            contentType: MediaType.parse("application/json"),
+          ),
+          "file": await MultipartFile.fromFile(images[0].path,
+              filename: images[0].path.split('/').last),
+        });
+      } else {
+        formData = FormData.fromMap({
+          "recommendationRequest": MultipartFile.fromString(
+            jsonEncode(recommendationRequest),
+            contentType: MediaType.parse("application/json"),
+          ),
+          "files": [
+            for (int i = 0; i < images.length; i++)
+              await MultipartFile.fromFile(images[i].path,
+                  filename: images[i].path.split('/').last),
+          ],
+        });
+      }
+
+      response = await _dio.post(_recommendationUrl,
+          data: formData, options: Options(contentType: 'multipart/form-data'));
+
+      final responseData = response.data;
+      if (response.statusCode == 200 &&
+          responseData is Map<String, dynamic> &&
+          responseData['error'] == false &&
+          responseData['message'] == "Recommendation created successfully") {
         return response;
       }else if (response.statusCode == 401) {
     

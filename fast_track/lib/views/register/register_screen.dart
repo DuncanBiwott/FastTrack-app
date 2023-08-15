@@ -281,7 +281,7 @@ class _SignUpState extends State<SignUp> {
                                 } catch (e) {
                                   print(e);
                                   _showSuccessMessage(
-                                      e.toString(),
+                                      "An Error Occured when creating Account!",
                                       Colors.red);
                       
                                   setState(() {

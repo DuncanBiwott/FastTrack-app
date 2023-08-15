@@ -189,15 +189,7 @@ onRefreshPage(){
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                         )),
-                        const SizedBox(width: 8.0,),
-                    Text(
-                      data[index].status,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                        color: data[index].status == 'OPEN' ? Colors.orange : Colors.green,
-                      ),
-                    ),
+                   
                   ],
                 ),
               ],

@@ -51,6 +51,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constants().welcomeBg,
       body: Center(
         child: Container(
       
@@ -73,7 +74,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           children: [
                             Icon(
                               FontAwesomeIcons.angleLeft,
-                              color: Constants().s_button,
+                        
                               size: 24,
                             ),
                             Text(

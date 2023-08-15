@@ -3,6 +3,7 @@ import 'package:fast_track/endpoints/endpoints.dart';
 import 'package:fast_track/models/complaint.dart';
 import 'package:fast_track/models/complaint_response.dart';
 import 'package:fast_track/models/feedback.dart';
+import 'package:fast_track/models/recommendation_response.dart';
 import 'package:fast_track/services/api/authenticationService/interceptors/exceptions/dio_exception.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,7 @@ class ComplaintClient {
   final String _locationUrl = EndPoints.locationUrl;
   final String _feedbackUrl = EndPoints.feedbackUrl;
   final String _profileUrl = EndPoints.profileUrl;
+  final String _recommendationUrl = EndPoints.recommendationUrl;
 
   final Dio _dio = Dio(
     BaseOptions(
@@ -156,6 +158,59 @@ class ComplaintClient {
             .map((complaint) => ComplaintResponse.fromJson(complaint))
             .toList();
         return complaints;
+      } else if (response.statusCode == 401) {
+        await prefs.remove('fast_token');
+
+        Navigator.pushReplacement(
+          context!,
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
+        );
+
+        throw Exception('Unauthorized');
+      } else {
+        throw Exception('Failed to get Complaints');
+      }
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw Exception(errorMessage);
+    }
+  }
+
+  //Get Recommendations
+  Future<List<RecommendationResponse>> getRecommendations({
+    required int perPage,
+    required int page,
+    String? search,
+    required BuildContext? context,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('fast_token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Token not found');
+      }
+
+      final options = Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      Response response = await _dio.get(
+        _recommendationUrl,
+        queryParameters: {'per_page': perPage, 'page': page, 'search': search},
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data["data"];
+        List<RecommendationResponse> recommendation = responseData
+            .map((recomm) => RecommendationResponse.fromJson(recomm))
+            .toList();
+        return recommendation;
       } else if (response.statusCode == 401) {
         await prefs.remove('fast_token');
 

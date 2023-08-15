@@ -26,6 +26,7 @@ class _MainPostScreenState extends State<MainPostScreen>
   TextEditingController? _locationController;
   final _formKeyComplaint = GlobalKey<FormState>();
   final _formKeyIncident = GlobalKey<FormState>();
+  final _formKeyrecommend = GlobalKey<FormState>();
   final List<File> _images = [];
   TabController? _tabController;
   final ComplaintClient _complaintClient = ComplaintClient();
@@ -56,7 +57,7 @@ class _MainPostScreenState extends State<MainPostScreen>
     _incidentTitleController = TextEditingController();
     _incidentController = TextEditingController();
     _locationController=TextEditingController();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _handleLocationPermission();
     _getCurrentPosition();
   }
@@ -153,6 +154,7 @@ class _MainPostScreenState extends State<MainPostScreen>
               ),
             ),
             TabBar(
+              isScrollable: true,
               indicatorWeight: 1.0,
               controller: _tabController,
               unselectedLabelColor: Constants().headline,
@@ -166,6 +168,7 @@ class _MainPostScreenState extends State<MainPostScreen>
               tabs: const [
                 Tab(text: 'Complaint'),
                 Tab(text: 'Incident'),
+                Tab(text: 'Recommendation'),
               ],
             ),
             Expanded(
@@ -347,6 +350,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                     ),
                   ),
                 ),
+               
+
                 Form(
                   key: _formKeyIncident,
                   child: Column(
@@ -541,6 +546,231 @@ class _MainPostScreenState extends State<MainPostScreen>
                                     });
                                     _showSuccessMessage(
                                         'Error Posting Incident', Colors.red);
+                                  }
+                                }
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Constants().p_button,
+                                ),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'SUBMIT',
+                                style: TextStyle(
+                                  color: Constants().p_button_text,
+                                  fontSize: 16.0,
+                                ),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
+
+
+                 Form(
+                  key: _formKeyrecommend,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "CATEGORY:",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                elevation: 0,
+                                value: incident,
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                items: status.map((String item) {
+                                  return DropdownMenuItem(
+                                    value: item,
+                                    child: Text(item),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    incident = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                       TextFormField(
+                        controller: _locationController,
+                        cursorColor: Colors.blue,
+                        decoration: InputDecoration(
+                          hintText: "Enter your location here near $_location",
+                          label: Row(
+                            children: [
+                              const Icon(Icons.location_on),
+                              RichText(
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.black),
+                                  children: [
+                                    const TextSpan(text: 'Your Location near '),
+                                    TextSpan(
+                                      text: '($_location)',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter your specific location here!'
+                            : null,
+                      ),
+                      TextFormField(
+                        controller: _incidentTitleController,
+                        cursorColor: Colors.blue,
+                        decoration: const InputDecoration(
+                          hintText: "Title",
+                        ),
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter a title for your Recommendation'
+                            : null,
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextFormField(
+                        autocorrect: true,
+                        maxLines: 5,
+                        enableSuggestions: true,
+                        controller: _incidentController,
+                        cursorColor: Colors.blue,
+                        decoration: const InputDecoration(
+                          hintText: "Recommend on offered services",
+                        ),
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter a description of the recommendation'
+                            : null,
+                      ),
+                   
+                     
+                      const SizedBox(height: 16.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Attach Image:',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                              icon: const Icon(
+                                Icons.location_on,
+                                size: 32.0,
+                              ),
+                              onPressed: () {} //=> _getCurrentPosition()
+                              ),
+                          IconButton(
+                            icon: const Icon(Icons.photo_camera),
+                            onPressed: () => _pickImage(ImageSource.camera),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.photo_library),
+                            onPressed: () => _pickImage(ImageSource.gallery),
+                          ),
+                        ],
+                      ),
+                      _isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : const SizedBox(height: 8.0),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: _images.length,
+                          itemBuilder: (context, index) {
+                            return Stack(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 8.0),
+                                  height: 200.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    image: DecorationImage(
+                                      image: FileImage(_images[index]),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 8.0,
+                                  right: 8.0,
+                                  child: GestureDetector(
+                                    onTap: () => _removeImage(index),
+                                    child: const Icon(
+                                      Icons.cancel,
+                                      color: Colors.black,
+                                      size: 32.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          height: 50.0,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKeyrecommend.currentState!.validate()) {
+                                  setState(() {
+                                    _isLoading =
+                                        true; // set isLoading to true when submitting data
+                                  });
+                                  try {
+                                    await _incidentClient.makeRecommendation(
+                                        _incidentTitleController!.text.trim(),
+                                        _incidentController!.text.trim(),
+                                        DateTime.now(),
+                                       "${_locationController!.text.trim()}($_location)",
+                                        "HEALTH",
+                                        _images,
+                                        context);
+                                    _showSuccessMessage(
+                                        'Recommendation Successfully Submitted',
+                                        Colors.green);
+                                    setState(() {
+                                      _isLoading =
+                                          false; // set isLoading to true when submitting data
+                                    });
+                                  } catch (e) {
+                                    setState(() {
+                                      _isLoading =
+                                          false; // set isLoading to true when submitting data
+                                    });
+                                    _showSuccessMessage(
+                                        'Error Posting recommendation', Colors.red);
                                   }
                                 }
                               },

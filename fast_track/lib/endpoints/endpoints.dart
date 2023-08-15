@@ -1,6 +1,6 @@
 class EndPoints{
   EndPoints._();
-  static const String ip_address="192.168.43.45:9000";
+  static const String ip_address="164.92.70.172:9000";
 
   // base url
   static const String getTokeUrl = "http://$ip_address/v1/api/token";
@@ -19,6 +19,9 @@ class EndPoints{
   static const String  feedbackUrl="http://$ip_address/v1/api/feedback";
 static const String  eventCategory="http://$ip_address/v1/api/events/find/category";
 static const String  profileUrl="http://$ip_address/v1/api/token/profile";
+static const String  recommendationUrl="http://$ip_address/v1/api/recommendation";
+static const String  botUrl='https://mybot-language.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=fasttrack-base&api-version=2021-10-01&deploymentName=production';
+
 
 
   // receiveTimeout

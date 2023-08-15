@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:fast_track/constants/constants.dart';
+import 'package:fast_track/endpoints/endpoints.dart';
 import 'package:fast_track/views/message_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
     };
 
     Response response = await dio.post(
-      'https://auto-chat-bot.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=quick-chat-app&api-version=2021-10-01&deploymentName=production',
+      EndPoints.botUrl,
       options: Options(headers: headers),
       data: jsonEncode(requestBody),
     );
