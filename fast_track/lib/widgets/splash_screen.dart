@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState(){
     super.initState();
-    Future.delayed(const Duration(seconds: 4)).then((value) => {
+    Future.delayed(const Duration(seconds: 3)).then((value) => {
       checkToken(context)
     });
   }

@@ -286,7 +286,7 @@ void _showOverlay(EventResponse event) {
                 ),
               );
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.search,color: Colors.black,),
           ),
           NotificationIcon(),
 

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/notification_provider.dart';
 import 'notification_screen.dart';
 
 class NotificationIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   
-    int unreadNotificationsCount = 3; 
+    final notificationProvider = Provider.of<NotificationProvider>(context);
+    int unreadNotificationsCount = notificationProvider.notifications.length;
 
     return Stack(
       children: [
         IconButton(
-          icon: const Icon(Icons.notifications,color:Colors.white,size: 32,),
+          icon: const Icon(Icons.notifications, color: Colors.black, size: 24),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NotificationScreen()),
+              MaterialPageRoute(builder: (context) =>  NotificationScreen()),
             );
           },
         ),

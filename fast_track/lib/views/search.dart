@@ -7,10 +7,10 @@ import 'package:intl/intl.dart';
 import '../constants/constants.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
@@ -64,17 +64,19 @@ class _SearchPageState extends State<SearchPage> {
     'School zone safety concerns',
     'Unlicensed businesses',
     'Flooded areas',
+    'Siwage blockage'
   ];
+
   Future<List<ComplaintResponse>>? _complaintsFuture;
-  Future<void> _fetchComplaints(String searchString) async {
-    setState(() {
-      _complaintsFuture = ComplaintClient().getComplaints(
-        page: 1,
-        perPage: 20,
-        context: context,
-        search: searchString,
-      );
-    });
+
+  Future<List<ComplaintResponse>> _fetchComplaints(String searchString) async {
+    final complaints = await ComplaintClient().getComplaints(
+      page: 1,
+      perPage: 20,
+      context: context,
+      search: searchString,
+    );
+    return complaints;
   }
 
   void _showDetailsBottomSheet(
@@ -179,7 +181,7 @@ class _SearchPageState extends State<SearchPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TypeAheadField(
+            TypeAheadField<String>(
               textFieldConfiguration: const TextFieldConfiguration(
                 autofocus: true,
                 decoration: InputDecoration(
@@ -187,8 +189,9 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               suggestionsCallback: (pattern) async {
-                return suggestions.where((item) =>
-                    item.toLowerCase().contains(pattern.toLowerCase()));
+                return suggestions.where(
+                  (item) => item.toLowerCase().contains(pattern.toLowerCase()),
+                );
               },
               itemBuilder: (context, suggestion) {
                 return ListTile(
@@ -196,7 +199,9 @@ class _SearchPageState extends State<SearchPage> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                _fetchComplaints(suggestion);
+                setState(() {
+                  _complaintsFuture = _fetchComplaints(suggestion);
+                });
               },
             ),
             Expanded(
@@ -211,6 +216,8 @@ class _SearchPageState extends State<SearchPage> {
                     return Center(
                       child: Text('Error: ${snapshot.error}'),
                     );
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return  Image.asset("assets/images/emptyd.png",height: MediaQuery.of(context).size.height,);
                   } else {
                     List<ComplaintResponse> data = snapshot.data!;
                     return ListView.builder(
@@ -237,48 +244,38 @@ class _SearchPageState extends State<SearchPage> {
                                         "https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png",
                                       ),
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          data[index].user["username"],
-                                          style: const TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
+                                    const SizedBox(
+                                        width:
+                                            8.0), // Add spacing between CircleAvatar and Column
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            data[index].user["fullName"],
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          formattedDate,
-                                          style: const TextStyle(
-                                            fontSize: 12.0,
-                                            color: Colors.grey,
+                                          Text(
+                                            formattedDate,
+                                            style: const TextStyle(
+                                              fontSize: 12.0,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                     Spacer(),
-                                    Row(
-                                      children: [
-                                        Text(data[index].location,
-                                            style: const TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                        const SizedBox(
-                                          width: 8.0,
-                                        ),
-                                        Text(
-                                          data[index].status,
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: data[index].status == 'OPEN'
-                                                ? Colors.orange
-                                                : Colors.green,
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      data[index].location,
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),

@@ -51,7 +51,7 @@ class _FeedsScreenState extends State<FeedsScreen>
                   ),
                 );
               },
-              icon: const Icon(Icons.search),
+              icon: const Icon(Icons.search,color: Colors.white,),
             ),
             NotificationIcon(),
         ],
@@ -64,7 +64,6 @@ class _FeedsScreenState extends State<FeedsScreen>
             Tab(text: 'Complaints'),
             Tab(
               text: 'Incidents',
-              icon: Icon(Icons.verified, color: Colors.blue),
             ),
             Tab(text: 'My Reports'),
             Tab(text: 'Recommendations'),

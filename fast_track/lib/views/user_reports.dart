@@ -57,7 +57,7 @@ onRefreshPage(){
                 ),
                 const SizedBox(height: 16.0),
                 Text(
-                  dataItem.user["username"],
+                  dataItem.user["fullName"],
                   style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
@@ -160,12 +160,12 @@ onRefreshPage(){
                     "https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png",
                   ),
                 ),
-               
+               const SizedBox(width: 8.0,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data[index].user["username"],
+                      data[index].user["fullName"],
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:fast_track/endpoints/endpoints.dart';
@@ -75,6 +76,31 @@ class IncidentClient {
       throw errorMessage;
     }
   }
+
+  //download Image
+  Future<Uint8List> downloadImage({required int id}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('fast_token');
+
+    if (token == null || token.isEmpty) {
+      throw Exception('Token not found');
+    }
+
+    final options = Options(
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+      responseType: ResponseType.bytes,
+    );
+
+    Response<List<int>> response = await _dio.get(
+      '$_baseUrl/download/$id',
+      options: options,
+    );
+
+    return Uint8List.fromList(response.data!);
+  }
+
 
     Future<List<EventResponse>> getAllEvents(
       {required int perpage, required int page, String? search,required BuildContext? context}) async {

@@ -9,6 +9,9 @@ import 'package:fast_track/services/api/user_request_services/incident_client.da
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/notification_provider.dart';
 
 class MainPostScreen extends StatefulWidget {
   const MainPostScreen({super.key});
@@ -56,7 +59,7 @@ class _MainPostScreenState extends State<MainPostScreen>
     _complaintTitleController = TextEditingController();
     _incidentTitleController = TextEditingController();
     _incidentController = TextEditingController();
-    _locationController=TextEditingController();
+    _locationController = TextEditingController();
     _tabController = TabController(length: 3, vsync: this);
     _handleLocationPermission();
     _getCurrentPosition();
@@ -135,7 +138,7 @@ class _MainPostScreenState extends State<MainPostScreen>
     }).catchError((e) {
       return e;
     });
-    return _location??"Loading ...";
+    return _location ?? "Loading ...";
   }
 
   @override
@@ -218,7 +221,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                           controller: _locationController,
                           cursorColor: Colors.blue,
                           decoration: InputDecoration(
-                            hintText: "Enter your location here near $_location",
+                            hintText:
+                                "Enter your location here near $_location",
                             label: Row(
                               children: [
                                 const Icon(Icons.location_on),
@@ -227,11 +231,13 @@ class _MainPostScreenState extends State<MainPostScreen>
                                     style: const TextStyle(
                                         fontSize: 16, color: Colors.black),
                                     children: [
-                                      const TextSpan(text: 'Your Location near '),
+                                      const TextSpan(
+                                          text: 'Your Location near '),
                                       TextSpan(
                                         text: '($_location)',
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold,fontSize: 20),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
                                       ),
                                     ],
                                   ),
@@ -275,7 +281,6 @@ class _MainPostScreenState extends State<MainPostScreen>
                         const SizedBox(
                           height: 16.0,
                         ),
-                  
                         Center(
                           child: Container(
                             height: 50.0,
@@ -284,13 +289,11 @@ class _MainPostScreenState extends State<MainPostScreen>
                               child: ElevatedButton(
                                   onPressed: () async {
                                     if (_formKeyComplaint.currentState!
-                  
                                         .validate()) {
                                       setState(() {
                                         _isLoading = true;
                                       });
-                                      
-                  
+
                                       try {
                                         await _complaintClient.addComplaint(
                                             context: context,
@@ -302,7 +305,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                               description: _complaintController!
                                                   .text
                                                   .trim(),
-                                              location: "${_locationController!.text.trim()}($_location) ",
+                                              location:
+                                                  "${_locationController!.text.trim()}($_location) ",
                                               status: 'OPEN',
                                               submissionDateTime: DateTime.now()
                                                   .toIso8601String(),
@@ -310,10 +314,16 @@ class _MainPostScreenState extends State<MainPostScreen>
                                         setState(() {
                                           _isLoading = false;
                                         });
-                  
+
                                         _showSuccessMessage(
                                             'Complaint Posted Successfully',
                                             Colors.green);
+                                        final notificationProvider =
+                                            Provider.of<NotificationProvider>(
+                                                context,
+                                                listen: false);
+                                        notificationProvider.addNotification(
+                                            'Complaint Posted Successfully');
                                       } catch (e) {
                                         setState(() {
                                           _isLoading = false;
@@ -332,7 +342,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                     shape: MaterialStateProperty.all<
                                         RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30.0),
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
                                       ),
                                     ),
                                   ),
@@ -350,8 +361,6 @@ class _MainPostScreenState extends State<MainPostScreen>
                     ),
                   ),
                 ),
-               
-
                 Form(
                   key: _formKeyIncident,
                   child: Column(
@@ -390,7 +399,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                           ],
                         ),
                       ),
-                       TextFormField(
+                      TextFormField(
                         controller: _locationController,
                         cursorColor: Colors.blue,
                         decoration: InputDecoration(
@@ -407,7 +416,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                     TextSpan(
                                       text: '($_location)',
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold,fontSize: 20),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
                                     ),
                                   ],
                                 ),
@@ -443,8 +453,6 @@ class _MainPostScreenState extends State<MainPostScreen>
                             ? 'Please enter a description of the incident'
                             : null,
                       ),
-                   
-                     
                       const SizedBox(height: 16.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -461,7 +469,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                                 Icons.location_on,
                                 size: 32.0,
                               ),
-                              onPressed: () {} //=> _getCurrentPosition()
+                              onPressed: () {}
                               ),
                           IconButton(
                             icon: const Icon(Icons.photo_camera),
@@ -528,21 +536,27 @@ class _MainPostScreenState extends State<MainPostScreen>
                                         _incidentTitleController!.text.trim(),
                                         _incidentController!.text.trim(),
                                         DateTime.now(),
-                                       "${_locationController!.text.trim()}($_location)",
+                                        "${_locationController!.text.trim()}($_location)",
                                         incident,
                                         _images,
                                         context);
                                     _showSuccessMessage(
                                         'Incident Posted Successfully',
                                         Colors.green);
+                                        final notificationProvider =
+                                            Provider.of<NotificationProvider>(
+                                                context,
+                                                listen: false);
+                                        notificationProvider.addNotification(
+                                            'Incident Posted Successfully');
                                     setState(() {
                                       _isLoading =
-                                          false; // set isLoading to true when submitting data
+                                          false; 
                                     });
                                   } catch (e) {
                                     setState(() {
                                       _isLoading =
-                                          false; // set isLoading to true when submitting data
+                                          false; 
                                     });
                                     _showSuccessMessage(
                                         'Error Posting Incident', Colors.red);
@@ -573,11 +587,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                     ],
                   ),
                 ),
-
-
-
-
-                 Form(
+                Form(
                   key: _formKeyrecommend,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -615,7 +625,7 @@ class _MainPostScreenState extends State<MainPostScreen>
                           ],
                         ),
                       ),
-                       TextFormField(
+                      TextFormField(
                         controller: _locationController,
                         cursorColor: Colors.blue,
                         decoration: InputDecoration(
@@ -632,7 +642,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                     TextSpan(
                                       text: '($_location)',
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold,fontSize: 20),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
                                     ),
                                   ],
                                 ),
@@ -668,8 +679,6 @@ class _MainPostScreenState extends State<MainPostScreen>
                             ? 'Please enter a description of the recommendation'
                             : null,
                       ),
-                   
-                     
                       const SizedBox(height: 16.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -743,7 +752,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: ElevatedButton(
                               onPressed: () async {
-                                if (_formKeyrecommend.currentState!.validate()) {
+                                if (_formKeyrecommend.currentState!
+                                    .validate()) {
                                   setState(() {
                                     _isLoading =
                                         true; // set isLoading to true when submitting data
@@ -753,13 +763,18 @@ class _MainPostScreenState extends State<MainPostScreen>
                                         _incidentTitleController!.text.trim(),
                                         _incidentController!.text.trim(),
                                         DateTime.now(),
-                                       "${_locationController!.text.trim()}($_location)",
+                                        "${_locationController!.text.trim()}($_location)",
                                         "HEALTH",
                                         _images,
                                         context);
                                     _showSuccessMessage(
                                         'Recommendation Successfully Submitted',
                                         Colors.green);
+                                        final notificationProvider =
+                                            Provider.of<NotificationProvider>(
+                                                context,
+                                                listen: false);
+                                        notificationProvider.addNotification('Recommendation Successfully Submitted');
                                     setState(() {
                                       _isLoading =
                                           false; // set isLoading to true when submitting data
@@ -770,7 +785,8 @@ class _MainPostScreenState extends State<MainPostScreen>
                                           false; // set isLoading to true when submitting data
                                     });
                                     _showSuccessMessage(
-                                        'Error Posting recommendation', Colors.red);
+                                        'Error Posting recommendation',
+                                        Colors.red);
                                   }
                                 }
                               },

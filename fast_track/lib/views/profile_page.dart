@@ -28,9 +28,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    _profileFuture  =complaintClient.getProfile(context: context);
+    _profileFuture = complaintClient.getProfile(context: context);
     super.initState();
-    
   }
 
   @override
@@ -54,101 +53,118 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-    FutureBuilder<Response>(
-  future: _profileFuture,
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (snapshot.hasError) {
-      return Center(
-        child: Text('Error: ${snapshot.error}'),
-      );
-    } else {
-      Map<String, dynamic>? userData = snapshot.data?.data;
+            FutureBuilder<Response>(
+              future: _profileFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else {
+                  Map<String, dynamic>? userData = snapshot.data?.data;
 
-      return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 8.0,
-        ),
-        child: Container(
-          height: 280,
-          width: MediaQuery.of(context).size.width * 0.7,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(color: Colors.grey),
+                  return Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+  child: Container(
+    height: 220,
+    width: MediaQuery.of(context).size.width * 0.7,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
+      border: Border.all(color: Colors.grey),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Icon(
+                FontAwesomeIcons.user,
+                size: 32,
+              ),
+              const Icon(
+                FontAwesomeIcons.angleRight,
+              ),
+            ],
           ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: const Icon(
-                  FontAwesomeIcons.user,
-                  size: 32,
+          const SizedBox(height: 12.0),
+          Text(
+            "Email: ${userData?['email'] ?? 'N/A'}",
+            style: TextStyle(fontSize: 16.0),
+          ),
+          const SizedBox(height: 4.0),
+          Row(
+            children: [
+              const Icon(
+                Icons.verified,
+                color: Colors.blue,
+                size: 16.0,
+              ),
+              const SizedBox(width: 4.0),
+              Text(
+                "UserName: ${userData?['username'] ?? 'N/A'}",
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ],
+          ),
+          Text(
+            "FullName: ${userData?['fullName'] ?? 'N/A'}",
+            style: TextStyle(fontSize: 16.0),
+          ),
+          Text(
+            "Account created At: ${userData?['createdAt'] ?? 'N/A'}",
+            style: TextStyle(fontSize: 16.0),
+          ),
+          Text(
+            "Status: ${userData?['contentStatus'] ?? 'N/A'}",
+            style: TextStyle(fontSize: 16.0),
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+
+                }
+              },
+            ),
+            const Divider(),
+             Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.notifications,
+                  ),
+                  title: const Text(
+                  "Payments & purchases",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 trailing: const Icon(
                   FontAwesomeIcons.angleRight,
+                  size: 24,
                 ),
-                title: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Text("Email: ${userData?['email'] ?? 'N/A'}"),
-                    const Icon(
-                      Icons.verified,
-                      color: Colors.blue,
-                    ),
-                    Text("UserName: ${userData?['username'] ?? 'N/A'}"),
-                    Text("FullName: ${userData?['fullName'] ?? 'N/A'}"),
-                    Text(
-                      "Account created At: ${userData?['createdAt'] ?? 'N/A'}"),
-                    Text("Status: ${userData?['contentStatus'] ?? 'N/A'}"),
-                  ],
+                  onTap: () {},
                 ),
-                onTap: () {},
               ),
             ),
-          ),
-        ),
-      );
-    }
-  },
-),
-            const Divider(),
-            Card(
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(8.0),
-    side: BorderSide(color: Colors.grey), 
-  ),
-  child: ListTile(
-    leading: Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.blue, 
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: const Icon(
-        FontAwesomeIcons.creditCard,
-        size: 24,
-        color: Colors.white, 
-      ),
-    ),
-    title: const Text(
-      "Payments & purchases",
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    trailing: const Icon(
-      FontAwesomeIcons.angleRight,
-      size: 24,
-    ),
-    onTap: () {},
-  ),
-),
-            Divider(),
+             const SizedBox(
+              height: 10,
+            ),
+          
             const Text(
               "Settings & Preferences",
             ),
